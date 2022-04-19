@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SharedTrips.Migrations
 {
-    public partial class CitiesCarsTripsTables : Migration
+    public partial class TripsCitiesCars : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -81,9 +81,11 @@ namespace SharedTrips.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MaxPassengers = table.Column<int>(type: "int", maxLength: 7, nullable: false),
+                    MaxPassengers = table.Column<int>(type: "int", maxLength: 6, nullable: false),
                     TimeOfDeparture = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Price = table.Column<int>(type: "int", nullable: false)
+                    Price = table.Column<int>(type: "int", maxLength: 100, nullable: false),
+                    FromCityId = table.Column<int>(type: "int", nullable: false),
+                    ToCityId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -10,8 +10,8 @@ using SharedTrips.Data;
 namespace SharedTrips.Migrations
 {
     [DbContext(typeof(SharedTripsDbContext))]
-    [Migration("20220415194543_CitiesCarsTripsTables2")]
-    partial class CitiesCarsTripsTables2
+    [Migration("20220419144918_TripsCitiesCars")]
+    partial class TripsCitiesCars
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -287,15 +287,22 @@ namespace SharedTrips.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("FromCityId")
+                        .HasColumnType("int");
+
                     b.Property<int>("MaxPassengers")
-                        .HasMaxLength(7)
+                        .HasMaxLength(6)
                         .HasColumnType("int");
 
                     b.Property<int>("Price")
+                        .HasMaxLength(100)
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeOfDeparture")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("ToCityId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

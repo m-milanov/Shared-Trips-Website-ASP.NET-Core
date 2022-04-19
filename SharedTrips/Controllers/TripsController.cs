@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SharedTrips.Data;
+using SharedTrips.Data.Models;
 using SharedTrips.Models.Cities;
 using SharedTrips.Models.Trips;
 using System;
@@ -30,7 +31,33 @@ namespace SharedTrips.Controllers
         [HttpPost]
         public IActionResult Add(AddTripFormModel trip)
         {
-            return View();
+            ValidateTripFormModel(trip);
+
+            if (!ModelState.IsValid)
+            {
+                trip.Cities = this.GetCities();
+                return View(trip);
+
+            }
+
+            var dataTrip = new Trip
+            {
+                Price = trip.Price,
+                TimeOfDeparture = trip.TimeOfDeparture,
+                MaxPassengers = trip.MaxPassengers,
+                FromCityId = trip.FromCityId,
+                ToCityId = trip.ToCityId,
+                Cities = new List<City>()
+                {
+                    data.Cities.First(c => c.Id == trip.FromCityId),
+                    data.Cities.First(c => c.Id == trip.ToCityId)
+                }.ToList()
+            };
+
+            this.data.Trips.Add(dataTrip);
+            this.data.SaveChanges();
+
+            return RedirectToAction("Index", "Home");
         }
 
         private IEnumerable<CityViewModel> GetCities()
@@ -41,6 +68,23 @@ namespace SharedTrips.Controllers
                 Name = c.Name
             })
             .ToList();
+
+        private void ValidateTripFormModel(AddTripFormModel trip)
+        {
+            if (trip.FromCityId == trip.ToCityId)
+            {
+                this.ModelState.AddModelError(nameof(trip.FromCityId),
+                    "You must enter 2 different cities.");
+            }
+
+            if (data.Cities.Any(c => c.Id == trip.FromCityId)
+                && data.Cities.Any(c => c.Id == trip.ToCityId))
+            {
+                this.ModelState.AddModelError(nameof(trip.FromCityId),
+                    "City not found");
+            }
+        }
     }
+
 
 }

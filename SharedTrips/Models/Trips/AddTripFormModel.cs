@@ -13,21 +13,20 @@ namespace SharedTrips.Models.Trips
 {
     public class AddTripFormModel
     {
-        [MaxLength(MaxTripPassengers)]
-        [MinLength(MinTripPassengers)]
+        [Range(MinTripPassengers, MaxTripPassengers)]
         public int MaxPassengers { get; init; }
 
         [Required]
         public DateTime TimeOfDeparture { get; init; }
 
-        [MaxLength(MaxTripPrice)]
-        [MinLength(MinTripPrice)]
+        [Range(MinTripPrice, MaxTripPrice)]
         public int Price { get; init; }
 
         public int FromCityId { get; set; }
 
         public int ToCityId { get; set; }
 
-        public IEnumerable<CityViewModel> Cities { get; set; }
+        
+        public IEnumerable<CityViewModel> Cities { get; set; } = new List<CityViewModel>();
     }
 }

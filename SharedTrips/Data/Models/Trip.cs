@@ -21,7 +21,11 @@ namespace SharedTrips.Data.Models
         [MaxLength(MaxTripPrice)]
         public int Price { get; set; }
 
+        public int FromCityId { get; set; }
+
+        public int ToCityId { get; set; }
+
         [Required]
-        public IEnumerable<City> Cities { get; set; }
+        public IEnumerable<City> Cities { get; set; } = new List<City>();
     }
 }

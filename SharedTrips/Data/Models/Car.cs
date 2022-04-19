@@ -17,7 +17,7 @@ namespace SharedTrips.Data.Models
         public string Brand { get; set; }
 
         [Required]
-        [MaxLength(CarModelMaxlength)]
+        [MaxLength(CarModelMaxLength)]
         public string Model { get; set; }
 
         [Required]

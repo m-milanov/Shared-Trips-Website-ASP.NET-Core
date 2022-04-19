@@ -8,30 +8,34 @@
         <div class="form-row">
             <div class="form-group col-md-4">
                 <label asp-for="Price">Price:</label>
-                <input asp-for="Price" type="number" class="form-control" placeholder="0">
+                <input asp-for="Price" class="form-control" placeholder="0">
+                <span asp-validation-for="Price" class="small text-danger"></span>
             </div>
             <div class="form-group col-md-4">
                 <label asp-for="TimeOfDeparture">Time of departure:</label>
-                <input asp-for="TimeOfDeparture" type="datetime" class="form-control" placeholder="@DateTime.Now">
+                <input asp-for="TimeOfDeparture" class="form-control" value="@DateTime.UtcNow">
+                <span asp-validation-for="TimeOfDeparture" class="small text-danger"></span>
             </div>
             <div class="form-group col-md-4">
                 <label asp-for="MaxPassengers">Max Passengers:</label>
-                <input asp-for="MaxPassengers" type="number" class="form-control" placeholder="3">
+                <input asp-for="MaxPassengers" class="form-control" placeholder="0">
+                <span asp-validation-for="MaxPassengers" class="small text-danger"></span>
             </div>
         </div>
-    
-        <div class="form-row">
         
+        <div class="form-row">
+
             <div class="form-group col-md-6">
                 <label asp-for="FromCityId">From City:</label>
                 <select asp-for="FromCityId" class="form-control">
-                    @foreach(var city in Model.Cities)
-                    { 
+                    @foreach (var city in Model.Cities)
+                    {
                         <option value="@city.Id">@city.Name</option>
                     }
                 </select>
+                <span asp-validation-for="FromCityId" class="small text-danger"></span>
             </div>
-        
+
             <div class="form-group col-md-6">
                 <label asp-for="ToCityId">To City</label>
                 <select asp-for="ToCityId" class="form-control">
@@ -40,10 +44,12 @@
                         <option value="@city.Id">@city.Name</option>
                     }
                 </select>
+                <span asp-validation-for="ToCityId" class="small text-danger"></span>
             </div>
-        
+
         </div>
-    
+        
+
         <button type="submit" class="btn btn-primary">Add</button>
     </form>
 
