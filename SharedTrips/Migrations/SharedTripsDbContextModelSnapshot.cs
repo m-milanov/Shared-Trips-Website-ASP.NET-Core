@@ -19,21 +19,6 @@ namespace SharedTrips.Migrations
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("CityTrip", b =>
-                {
-                    b.Property<int>("CitiesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TripsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CitiesId", "TripsId");
-
-                    b.HasIndex("TripsId");
-
-                    b.ToTable("CityTrip");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -304,22 +289,11 @@ namespace SharedTrips.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FromCityId");
+
+                    b.HasIndex("ToCityId");
+
                     b.ToTable("Trips");
-                });
-
-            modelBuilder.Entity("CityTrip", b =>
-                {
-                    b.HasOne("SharedTrips.Data.Models.City", null)
-                        .WithMany()
-                        .HasForeignKey("CitiesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SharedTrips.Data.Models.Trip", null)
-                        .WithMany()
-                        .HasForeignKey("TripsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -371,6 +345,32 @@ namespace SharedTrips.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("SharedTrips.Data.Models.Trip", b =>
+                {
+                    b.HasOne("SharedTrips.Data.Models.City", "FromCity")
+                        .WithMany("StartOfTrip")
+                        .HasForeignKey("FromCityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SharedTrips.Data.Models.City", "ToCity")
+                        .WithMany("EndOfTrip")
+                        .HasForeignKey("ToCityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FromCity");
+
+                    b.Navigation("ToCity");
+                });
+
+            modelBuilder.Entity("SharedTrips.Data.Models.City", b =>
+                {
+                    b.Navigation("EndOfTrip");
+
+                    b.Navigation("StartOfTrip");
                 });
 #pragma warning restore 612, 618
         }

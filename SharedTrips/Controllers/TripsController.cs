@@ -47,17 +47,18 @@ namespace SharedTrips.Controllers
                 MaxPassengers = trip.MaxPassengers,
                 FromCityId = trip.FromCityId,
                 ToCityId = trip.ToCityId,
-                Cities = new List<City>()
-                {
-                    data.Cities.First(c => c.Id == trip.FromCityId),
-                    data.Cities.First(c => c.Id == trip.ToCityId)
-                }.ToList()
             };
 
             this.data.Trips.Add(dataTrip);
             this.data.SaveChanges();
 
             return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult All()
+        {
+
+            return View();
         }
 
         private IEnumerable<CityViewModel> GetCities()
@@ -77,8 +78,8 @@ namespace SharedTrips.Controllers
                     "You must enter 2 different cities.");
             }
 
-            if (data.Cities.Any(c => c.Id == trip.FromCityId)
-                && data.Cities.Any(c => c.Id == trip.ToCityId))
+            if (!data.Cities.Any(c => c.Id == trip.FromCityId)
+                || !data.Cities.Any(c => c.Id == trip.ToCityId))
             {
                 this.ModelState.AddModelError(nameof(trip.FromCityId),
                     "City not found");

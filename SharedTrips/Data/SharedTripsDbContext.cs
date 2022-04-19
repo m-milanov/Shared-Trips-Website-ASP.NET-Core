@@ -24,9 +24,16 @@ namespace SharedTrips.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Trip>()
-                .HasMany<City>(s => s.Cities)
-                .WithMany(c => c.Trips);
-                
+                .HasOne(t => t.FromCity)
+                .WithMany(c => c.StartOfTrip)
+                .HasForeignKey(t => t.FromCityId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Trip>()
+                .HasOne(t => t.ToCity)
+                .WithMany(c => c.EndOfTrip)
+                .HasForeignKey(t => t.ToCityId);
+
             base.OnModelCreating(builder);
         }
         

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SharedTrips.Migrations
 {
-    public partial class TripsCitiesCars : Migration
+    public partial class TripsAdnCitiesRelationUpdate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -73,23 +73,6 @@ namespace SharedTrips.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cities", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Trips",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MaxPassengers = table.Column<int>(type: "int", maxLength: 6, nullable: false),
-                    TimeOfDeparture = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Price = table.Column<int>(type: "int", maxLength: 100, nullable: false),
-                    FromCityId = table.Column<int>(type: "int", nullable: false),
-                    ToCityId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Trips", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -199,25 +182,30 @@ namespace SharedTrips.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CityTrip",
+                name: "Trips",
                 columns: table => new
                 {
-                    CitiesId = table.Column<int>(type: "int", nullable: false),
-                    TripsId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MaxPassengers = table.Column<int>(type: "int", maxLength: 6, nullable: false),
+                    TimeOfDeparture = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Price = table.Column<int>(type: "int", maxLength: 100, nullable: false),
+                    FromCityId = table.Column<int>(type: "int", nullable: false),
+                    ToCityId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CityTrip", x => new { x.CitiesId, x.TripsId });
+                    table.PrimaryKey("PK_Trips", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CityTrip_Cities_CitiesId",
-                        column: x => x.CitiesId,
+                        name: "FK_Trips_Cities_FromCityId",
+                        column: x => x.FromCityId,
                         principalTable: "Cities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_CityTrip_Trips_TripsId",
-                        column: x => x.TripsId,
-                        principalTable: "Trips",
+                        name: "FK_Trips_Cities_ToCityId",
+                        column: x => x.ToCityId,
+                        principalTable: "Cities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -262,9 +250,14 @@ namespace SharedTrips.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CityTrip_TripsId",
-                table: "CityTrip",
-                column: "TripsId");
+                name: "IX_Trips_FromCityId",
+                table: "Trips",
+                column: "FromCityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Trips_ToCityId",
+                table: "Trips",
+                column: "ToCityId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -288,7 +281,7 @@ namespace SharedTrips.Migrations
                 name: "Cars");
 
             migrationBuilder.DropTable(
-                name: "CityTrip");
+                name: "Trips");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -298,9 +291,6 @@ namespace SharedTrips.Migrations
 
             migrationBuilder.DropTable(
                 name: "Cities");
-
-            migrationBuilder.DropTable(
-                name: "Trips");
         }
     }
 }

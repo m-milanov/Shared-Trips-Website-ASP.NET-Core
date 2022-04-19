@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,9 +24,11 @@ namespace SharedTrips.Data.Models
 
         public int FromCityId { get; set; }
 
+        public City FromCity { get; set; }
+
         public int ToCityId { get; set; }
 
-        [Required]
-        public IEnumerable<City> Cities { get; set; } = new List<City>();
+        public City ToCity { get; set; }
+
     }
 }
