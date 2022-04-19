@@ -1,0 +1,50 @@
+﻿@model AddTripFormModel
+
+<div class="container">
+
+    <h2 class="text-center my-20">Add Trip</h2>
+
+    <form method="post">
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label asp-for="Price">Price:</label>
+                <input asp-for="Price" type="number" class="form-control" placeholder="0">
+            </div>
+            <div class="form-group col-md-4">
+                <label asp-for="TimeOfDeparture">Time of departure:</label>
+                <input asp-for="TimeOfDeparture" type="datetime" class="form-control" placeholder="@DateTime.Now">
+            </div>
+            <div class="form-group col-md-4">
+                <label asp-for="MaxPassengers">Max Passengers:</label>
+                <input asp-for="MaxPassengers" type="number" class="form-control" placeholder="3">
+            </div>
+        </div>
+    
+        <div class="form-row">
+        
+            <div class="form-group col-md-6">
+                <label asp-for="FromCityId">From City:</label>
+                <select asp-for="FromCityId" class="form-control">
+                    @foreach(var city in Model.Cities)
+                    { 
+                        <option value="@city.Id">@city.Name</option>
+                    }
+                </select>
+            </div>
+        
+            <div class="form-group col-md-6">
+                <label asp-for="ToCityId">To City</label>
+                <select asp-for="ToCityId" class="form-control">
+                    @foreach (var city in Model.Cities)
+                    {
+                        <option value="@city.Id">@city.Name</option>
+                    }
+                </select>
+            </div>
+        
+        </div>
+    
+        <button type="submit" class="btn btn-primary">Add</button>
+    </form>
+
+</div>
