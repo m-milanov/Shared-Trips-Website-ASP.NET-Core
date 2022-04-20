@@ -36,6 +36,5 @@ namespace SharedTrips.Data
 
             base.OnModelCreating(builder);
         }
-        
     }
 }

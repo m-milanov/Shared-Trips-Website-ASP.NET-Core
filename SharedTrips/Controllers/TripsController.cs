@@ -57,8 +57,19 @@ namespace SharedTrips.Controllers
 
         public IActionResult All()
         {
+            var trips = this.data.Trips
+                .OrderByDescending(t => t.Id)
+                .Select(t => new TripListingViewModel
+                {
+                    Id = t.Id,
+                    Price = t.Price,
+                    TimeOfDeparture = t.TimeOfDeparture,
+                    FromCity = t.FromCity.Name,
+                    ToCity = t.ToCity.Name
+                }).ToList();
 
-            return View();
+
+            return View(trips);
         }
 
         private IEnumerable<CityViewModel> GetCities()
