@@ -52,24 +52,44 @@ namespace SharedTrips.Controllers
             this.data.Trips.Add(dataTrip);
             this.data.SaveChanges();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(nameof(All));
         }
 
-        public IActionResult All()
+        public IActionResult All(int fromCityId, int toCityId, DateTime timeOfDeparture)
         {
-            var trips = this.data.Trips
+            var tripsQuery = this.data.Trips.AsQueryable();
+
+            if(fromCityId != 0 && toCityId != 0 && timeOfDeparture.Date > DateTime.UtcNow.Date)
+            {
+                tripsQuery = tripsQuery.Where(t =>
+                t.FromCityId == fromCityId && 
+                t.ToCityId == toCityId && 
+                t.TimeOfDeparture.Date == timeOfDeparture.Date);
+            }
+
+            var allTripsViewModel = new AllTripsViewModel();
+
+            allTripsViewModel.Trips = tripsQuery
                 .OrderByDescending(t => t.Id)
                 .Select(t => new TripListingViewModel
                 {
                     Id = t.Id,
                     Price = t.Price,
                     TimeOfDeparture = t.TimeOfDeparture,
+                    MaxPassengers = t.MaxPassengers,
                     FromCity = t.FromCity.Name,
                     ToCity = t.ToCity.Name
                 }).ToList();
 
+            allTripsViewModel.Cities = this.data.Cities
+                .OrderBy(c => c.Name)
+                .Select(c => new CityViewModel
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                });
 
-            return View(trips);
+            return View(allTripsViewModel);
         }
 
         private IEnumerable<CityViewModel> GetCities()

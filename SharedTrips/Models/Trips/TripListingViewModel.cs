@@ -14,8 +14,11 @@ namespace SharedTrips.Models.Trips
 
         public DateTime TimeOfDeparture { get; init; }
 
+        public int MaxPassengers { get; set; }
+
         public string FromCity { get; init; }
 
         public string ToCity { get; init; }
+
     }
 }

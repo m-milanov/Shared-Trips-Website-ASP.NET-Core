@@ -1,76 +1,116 @@
-﻿@model List<TripListingViewModel>
-    
-    <div class="row">
+﻿@model AllTripsViewModel
 
-        @foreach (var trip in Model)
-        {
-        <div class="col-6 mb-2">
-            <a class="text-link" href="/WillDrive/Details?willDriveId=b5705a83-20a1-4c87-b957-1351da0c1569">
-                <div class="card bg-light">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-5 col-xl-3 col-lg-4 mb-3 mb-md-0">
-                                <div class="d-flex flex-row justify-content-center">
-                                    <img src="https://s3.eu-central-1.amazonaws.com/tripinfy-production/Rect/4365ccc8-c1e2-49f0-a7fc-88d64e836937.jpg"
-                                         alt="Снимка" class="rounded-circle profile-picture pp-small img-fluid">
-                                </div>
-                                <div class="d-flex flex-row justify-content-center">
-                                    <span class="text-md-center">Динис</span>
-                                </div>
-                                <div class="d-flex flex-row justify-content-center">
-                                    <div class="d-inline">
-                                        <i class="fa fa-star text-primary"></i>
-                                        <i class="fa fa-star text-primary"></i>
-                                        <i class="fa fa-star text-primary"></i>
-                                        <i class="fa fa-star text-primary"></i>
-                                        <i class="fa fa-star text-primary"></i>
+    <h2 class="text-center my-4">All available trips</h2>    
 
-                                    </div>
+<form method="get" class="form-inline my-3  ">
+    <div class="form-row w-100">
+        <div class="form-group col-md-3 justify-content-start d-flex flex-wrap">
+            <label asp-for="FromCityId" class="d-block w-100">From City:</label>
+            <select asp-for="FromCityId" class="form-control w-75">
+                <option value="">All</option>
+                @foreach (var city in Model.Cities)
+                {
+                    <option value="@city.Id">@city.Name</option>
+                }
+            </select>
+            <span asp-validation-for="FromCityId" class="small text-danger"></span>
+        </div>
+
+        <div class="form-group col-md-3 justify-content-start">
+            <label asp-for="ToCityId" class="d-block w-100">To City:</label>
+            <select asp-for="ToCityId" class="form-control w-75">
+                <option value="">All</option>
+                @foreach (var city in Model.Cities)
+                {
+                    <option value="@city.Id">@city.Name</option>
+                }
+            </select>
+            <span asp-validation-for="ToCityId" class="small text-danger"></span>
+        </div>
+
+        <div class="form-group col-md-4">
+            <label asp-for="TimeOfDeparture" class="d-block w-100">Time of departure:</label>
+            <input asp-for="TimeOfDeparture" class="form-control" value="@DateTime.UtcNow">
+            <span asp-validation-for="TimeOfDeparture" class="small text-danger"></span>
+        </div>
+        <div class="form-group col-md-2">
+            <input class="btn btn-outline-success my-2 my-sm-0 w-100" type="submit" value="Search">
+        </div> 
+
+    </div>
+</form>
+
+<div class="row">
+
+    @foreach (var trip in Model.Trips)
+    {
+    <div class="col-6 mb-2">
+        <a asp-controller="Trip" asp-action="Details" asp-route-id="@trip.Id" class="list-group-item list-group-item-action flex-column p-0">
+            <div class="card bg-light d-flex w-100 tripCard">
+                <div class="card-body d-flex justify-content-between ">
+                    <div class="row">   
+                        <div class="col-md-5 col-xl-3 col-lg-4 mb-3 mb-md-0">
+                            <div class="d-flex flex-row justify-content-center">
+                                <img src="https://s3.eu-central-1.amazonaws.com/tripinfy-production/Rect/4365ccc8-c1e2-49f0-a7fc-88d64e836937.jpg"
+                                     alt="Profile Picture" class="rounded-circle profile-picture pp-small img-fluid">
+                            </div>
+                            <div class="d-flex flex-row justify-content-center">
+                                <span class="text-md-center">Динис</span>
+                            </div>
+                            <div class="d-flex flex-row justify-content-center">
+                                <div class="d-inline">
+                                    <i class="fa fa-star text-primary"></i>
+                                    <i class="fa fa-star text-primary"></i>
+                                    <i class="fa fa-star text-primary"></i>
+                                    <i class="fa fa-star text-primary"></i>
+                                    <i class="fa fa-star text-primary"></i>
+
                                 </div>
                             </div>
-                            <div class="col-md-7 col-xl-9 col-lg-8">
-                                <div class="row">
-                                    <div class="col-12 col-xl-6">
-                                        <i class="fa-solid fa-location-dot text-success md-18"></i>
-                                        <span class="text-muted">From: </span>
-                                        <span>@trip.FromCity</span>
-                                    </div>
-                                    <div class="col-12 col-xl-6">
-                                        <i class="fa-solid fa-location-dot material-icons text-success md-18"></i>
-                                        <span class="text-muted">To: </span>
-                                        <span>@trip.ToCity</span>
-                                    </div>
-                                    <div class="col-12 col-xl-6">
-                                        <i class="material-icons text-success md-18"></i>
-                                        <span class="text-muted">Дата: </span>
-                                        <span>20.04.2022 г.</span>
-                                    </div>
-                                    <div class="col-12 col-xl-6">
-                                        <i class="material-icons text-success md-18"></i>
-                                        <span class="text-muted">Час: </span>
-                                        <span class="align-top">15:00 ч.</span>
-                                    </div>
-                                    <div class="col-12 col-xl-6">
-                                        <i class="material-icons text-success md-18"></i>
-                                        <span class="text-muted">Цена: </span>
-                                        <span>15 лв.</span>
-                                    </div>
-                                    <div class="col-12 col-xl-6">
-                                        <i class="material-icons text-success md-18"></i>
-                                        <span class="text-muted">Места: </span>
-                                        <span>1 от 1</span>
-                                    </div>
-                                    <div class="col-12">
-                                        <i class="material-icons text-success md-18"></i>
-                                        <span class="text-muted">Автомобил: </span>
-                                        <span>Volkswagen Golf Mk4</span>
-                                    </div>
+                        </div>
+                        <div class="col-md-7 col-xl-9 col-lg-8">
+                            <div class="row">
+                                <div class="col-12 col-xl-6 trip-info my-2">
+                                    <i class="fa-solid fa-location-dot text-success md-18"></i>
+                                    <span class="text-muted">From:</span>
+                                    <span>@trip.FromCity</span>
+                                </div>
+                                <div class="col-12 col-xl-6 my-2">
+                                    <i class="fa-solid fa-location-dot material-icons text-success md-18"></i>
+                                    <span class="text-muted">To: </span>
+                                    <span>@trip.ToCity</span>
+                                </div>
+                                <div class="col-12 col-xl-6 my-2">
+                                    <i class="fa-solid fa-calendar-days text-success md-18"></i>
+                                    <span class="text-muted">Date:</span>
+                                    <span>@trip.TimeOfDeparture.ToShortDateString()</span>
+                                </div>
+                                <div class="col-12 col-xl-6 my-2">
+                                    <i class="fa-solid fa-clock text-success md-18"></i>
+                                    <span class="text-muted">Hour:</span>
+                                    <span class="align-top">@trip.TimeOfDeparture.ToShortTimeString()</span>
+                                </div>
+                                <div class="col-12 col-xl-6 my-2">
+                                    <i class="fa-solid fa-money-bill-1-wave text-success md-18"></i>
+                                    <span class="text-muted">Price:</span>
+                                    <span>@trip.Price</span>
+                                </div>
+                                <div class="col-12 col-xl-6 my-2">
+                                    <i class="fa-solid fa-users text-success md-18"></i>
+                                    <span class="text-muted">Aveable seats:</span>
+                                    <span>@trip.MaxPassengers</span>
+                                </div>
+                                <div class="col-12 my-2">
+                                    <i class="fa-solid fa-car-side text-success md-18"></i>
+                                    <span class="text-muted">Car:</span>
+                                    <span>Volkswagen Golf Mk4</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </a>
-        </div>
-        }
+            </div>
+        </a>
     </div>
+    }
+</div>
