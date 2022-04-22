@@ -1,6 +1,6 @@
 ﻿@model AllTripsViewModel
 
-    <h2 class="text-center my-4">All available trips</h2>    
+<h2 class="text-center my-4">All available trips</h2>
 
 <form method="get" class="form-inline my-3  ">
     <div class="form-row w-100">
@@ -29,13 +29,13 @@
         </div>
 
         <div class="form-group col-md-4">
-            <label asp-for="TimeOfDeparture" class="d-block w-100">Time of departure:</label>
-            <input asp-for="TimeOfDeparture" class="form-control" value="@DateTime.UtcNow">
+            <label asp-for="TimeOfDeparture" class="d-block w-100">Date of departure:</label>
+            <input asp-for="TimeOfDeparture" value="@DateTime.UtcNow" class="form-control" id="timeOfDeparture">
             <span asp-validation-for="TimeOfDeparture" class="small text-danger"></span>
         </div>
         <div class="form-group col-md-2">
             <input class="btn btn-outline-success my-2 my-sm-0 w-100" type="submit" value="Search">
-        </div> 
+        </div>
 
     </div>
 </form>
@@ -44,73 +44,126 @@
 
     @foreach (var trip in Model.Trips)
     {
-    <div class="col-6 mb-2">
-        <a asp-controller="Trip" asp-action="Details" asp-route-id="@trip.Id" class="list-group-item list-group-item-action flex-column p-0">
-            <div class="card bg-light d-flex w-100 tripCard">
-                <div class="card-body d-flex justify-content-between ">
-                    <div class="row">   
-                        <div class="col-md-5 col-xl-3 col-lg-4 mb-3 mb-md-0">
-                            <div class="d-flex flex-row justify-content-center">
-                                <img src="https://s3.eu-central-1.amazonaws.com/tripinfy-production/Rect/4365ccc8-c1e2-49f0-a7fc-88d64e836937.jpg"
-                                     alt="Profile Picture" class="rounded-circle profile-picture pp-small img-fluid">
-                            </div>
-                            <div class="d-flex flex-row justify-content-center">
-                                <span class="text-md-center">Динис</span>
-                            </div>
-                            <div class="d-flex flex-row justify-content-center">
-                                <div class="d-inline">
-                                    <i class="fa fa-star text-primary"></i>
-                                    <i class="fa fa-star text-primary"></i>
-                                    <i class="fa fa-star text-primary"></i>
-                                    <i class="fa fa-star text-primary"></i>
-                                    <i class="fa fa-star text-primary"></i>
+        <div class="col-6 mb-2">
+            <a asp-controller="Trip" asp-action="Details" asp-route-id="@trip.Id" class="list-group-item list-group-item-action flex-column p-0">
+                <div class="card bg-light d-flex w-100 tripCard">
+                    <div class="card-body d-flex justify-content-between ">
+                        <div class="row">
+                            <div class="col-md-5 col-xl-3 col-lg-4 mb-3 mb-md-0">
+                                <div class="d-flex flex-row justify-content-center">
+                                    <img src="https://s3.eu-central-1.amazonaws.com/tripinfy-production/Rect/4365ccc8-c1e2-49f0-a7fc-88d64e836937.jpg"
+                                         alt="Profile Picture" class="rounded-circle profile-picture pp-small img-fluid">
+                                </div>
+                                <div class="d-flex flex-row justify-content-center">
+                                    <span class="text-md-center">Динис</span>
+                                </div>
+                                <div class="d-flex flex-row justify-content-center">
+                                    <div class="d-inline">
+                                        <i class="fa fa-star text-primary"></i>
+                                        <i class="fa fa-star text-primary"></i>
+                                        <i class="fa fa-star text-primary"></i>
+                                        <i class="fa fa-star text-primary"></i>
+                                        <i class="fa fa-star text-primary"></i>
 
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-7 col-xl-9 col-lg-8">
-                            <div class="row">
-                                <div class="col-12 col-xl-6 trip-info my-2">
-                                    <i class="fa-solid fa-location-dot text-success md-18"></i>
-                                    <span class="text-muted">From:</span>
-                                    <span>@trip.FromCity</span>
-                                </div>
-                                <div class="col-12 col-xl-6 my-2">
-                                    <i class="fa-solid fa-location-dot material-icons text-success md-18"></i>
-                                    <span class="text-muted">To: </span>
-                                    <span>@trip.ToCity</span>
-                                </div>
-                                <div class="col-12 col-xl-6 my-2">
-                                    <i class="fa-solid fa-calendar-days text-success md-18"></i>
-                                    <span class="text-muted">Date:</span>
-                                    <span>@trip.TimeOfDeparture.ToShortDateString()</span>
-                                </div>
-                                <div class="col-12 col-xl-6 my-2">
-                                    <i class="fa-solid fa-clock text-success md-18"></i>
-                                    <span class="text-muted">Hour:</span>
-                                    <span class="align-top">@trip.TimeOfDeparture.ToShortTimeString()</span>
-                                </div>
-                                <div class="col-12 col-xl-6 my-2">
-                                    <i class="fa-solid fa-money-bill-1-wave text-success md-18"></i>
-                                    <span class="text-muted">Price:</span>
-                                    <span>@trip.Price</span>
-                                </div>
-                                <div class="col-12 col-xl-6 my-2">
-                                    <i class="fa-solid fa-users text-success md-18"></i>
-                                    <span class="text-muted">Aveable seats:</span>
-                                    <span>@trip.MaxPassengers</span>
-                                </div>
-                                <div class="col-12 my-2">
-                                    <i class="fa-solid fa-car-side text-success md-18"></i>
-                                    <span class="text-muted">Car:</span>
-                                    <span>Volkswagen Golf Mk4</span>
+                            <div class="col-md-7 col-xl-9 col-lg-8">
+                                <div class="row">
+                                    <div class="col-12 col-xl-6 trip-info my-2">
+                                        <i class="fa-solid fa-location-dot text-success md-18"></i>
+                                        <span class="text-muted">From:</span>
+                                        <span>@trip.FromCity</span>
+                                    </div>
+                                    <div class="col-12 col-xl-6 my-2">
+                                        <i class="fa-solid fa-location-dot material-icons text-success md-18"></i>
+                                        <span class="text-muted">To: </span>
+                                        <span>@trip.ToCity</span>
+                                    </div>
+                                    <div class="col-12 col-xl-6 my-2">
+                                        <i class="fa-solid fa-calendar-days text-success md-18"></i>
+                                        <span class="text-muted">Date:</span>
+                                        <span>@trip.TimeOfDeparture.ToShortDateString()</span>
+                                    </div>
+                                    <div class="col-12 col-xl-6 my-2">
+                                        <i class="fa-solid fa-clock text-success md-18"></i>
+                                        <span class="text-muted">Hour:</span>
+                                        <span class="align-top">@trip.TimeOfDeparture.ToShortTimeString()</span>
+                                    </div>
+                                    <div class="col-12 col-xl-6 my-2">
+                                        <i class="fa-solid fa-money-bill-1-wave text-success md-18"></i>
+                                        <span class="text-muted">Price:</span>
+                                        <span>@trip.Price</span>
+                                    </div>
+                                    <div class="col-12 col-xl-6 my-2">
+                                        <i class="fa-solid fa-users text-success md-18"></i>
+                                        <span class="text-muted">Aveable seats:</span>
+                                        <span>@trip.MaxPassengers</span>
+                                    </div>
+                                    <div class="col-12 my-2">
+                                        <i class="fa-solid fa-car-side text-success md-18"></i>
+                                        <span class="text-muted">Car:</span>
+                                        <span>Volkswagen Golf Mk4</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </a>
-    </div>
+            </a>
+        </div>
     }
 </div>
+
+<!--
+
+@{
+var previousPage = Model.CurrentPage - 1;
+if(previousPage < 1)
+{
+    previousPage = 1;
+}
+var nextPage = Model.CurrentPage + 1;
+
+var maxPage = Math.Ceiling((double)Model.TotalTrips / Model.TripsPerPage);
+}
+
+<div class="row">
+
+    <div class="col-md-6">
+        <a class="btn btn-success @(Model.CurrentPage == 1 ? "disabled" : string.Empty)"
+           asp-controller="Trips"
+           asp-action="All"
+           asp-route-CurrentPage="@previousPage"
+           asp-route-FromCityId="@Model.FromCityId"
+           asp-route-ToCityId="@Model.ToCityId"
+           asp-route-TimeOfDeparture="@Model.TimeOfDeparture"
+           ><i class="fa-solid fa-arrow-left"></i></a>
+    </div>
+
+    <div class="col-md-6">
+        <a class="btn btn-success float-right @(Model.CurrentPage == maxPage ? "disabled" : string.Empty)"
+           asp-controller="Trips"
+           asp-action="All"
+           asp-route-CurrentPage="@nextPage"
+           asp-route-FromCityId="@Model.FromCityId"
+           asp-route-ToCityId="@Model.ToCityId"
+           asp-route-TimeOfDeparture="@Model.TimeOfDeparture"
+          ><i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+
+</div>
+
+@section Scripts{
+<script>
+  $(function () {
+    $('#timeOfDeparture').datetimepicker({
+      format: 'YYYY-MM-DD HH:mm',
+      useCurrent: true
+
+    });
+  });
+</script>
+}
+
+-->

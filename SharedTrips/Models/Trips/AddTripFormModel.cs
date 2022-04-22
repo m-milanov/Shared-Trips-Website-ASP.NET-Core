@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-using static SharedTrips.Data.DataConstants;
+using static SharedTrips.Data.DataConstants.Trip;
 
 
 namespace SharedTrips.Models.Trips
@@ -19,7 +19,7 @@ namespace SharedTrips.Models.Trips
         [Required]
         public DateTime TimeOfDeparture { get; init; }
 
-        [Range(MinTripPrice, MaxTripPrice)]
+        [Range(MinPrice, MaxPrice)]
         public int Price { get; init; }
 
         public int FromCityId { get; set; }

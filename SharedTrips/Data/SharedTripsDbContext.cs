@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SharedTrips.Data.Models;
 using System;
@@ -15,6 +16,10 @@ namespace SharedTrips.Data
         public DbSet<City> Cities { get; set; }
 
         public DbSet<Car> Cars { get; set; }
+
+        public DbSet<Driver> Drivers { get; set; }
+
+        public DbSet<Feedback> Feedbacks { get; set; }
 
         public SharedTripsDbContext(DbContextOptions<SharedTripsDbContext> options)
             : base(options)
@@ -33,6 +38,12 @@ namespace SharedTrips.Data
                 .HasOne(t => t.ToCity)
                 .WithMany(c => c.EndOfTrip)
                 .HasForeignKey(t => t.ToCityId);
+
+            builder.Entity<Driver>()
+                .HasOne<IdentityUser>()
+                .WithOne()
+                .HasForeignKey<Driver>(d => d.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(builder);
         }

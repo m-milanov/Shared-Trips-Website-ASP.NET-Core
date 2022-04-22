@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-using static SharedTrips.Data.DataConstants;
+using static SharedTrips.Data.DataConstants.Car;
 
 namespace SharedTrips.Data.Models
 {
@@ -13,17 +13,22 @@ namespace SharedTrips.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(CarBrandMaxLength)]
+        [MaxLength(BrandMaxLength)]
         public string Brand { get; set; }
 
         [Required]
-        [MaxLength(CarModelMaxLength)]
+        [MaxLength(ModelMaxLength)]
         public string Model { get; set; }
 
         [Required]
+        [Url]
         public string ImgUrl { get; set; }
 
         [Required]
         public int Year { get; set; }
+
+        public int DriverId { get; set; }
+
+        public Driver Driver { get; set; }
     }
 }

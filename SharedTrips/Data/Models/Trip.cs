@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-using static SharedTrips.Data.DataConstants;
+using static SharedTrips.Data.DataConstants.Trip;
 
 namespace SharedTrips.Data.Models
 {
@@ -13,13 +13,11 @@ namespace SharedTrips.Data.Models
     {
         public int Id { get; set; }
 
-        [MaxLength(MaxTripPassengers)]
         public int MaxPassengers { get; set; }
 
         [Required]
         public DateTime TimeOfDeparture { get; set; }
 
-        [MaxLength(MaxTripPrice)]
         public int Price { get; set; }
 
         public int FromCityId { get; set; }
@@ -29,6 +27,10 @@ namespace SharedTrips.Data.Models
         public int ToCityId { get; set; }
 
         public City ToCity { get; set; }
+
+        public int DriverId { get; set; }
+
+        public Driver Driver { get; set; }
 
     }
 }

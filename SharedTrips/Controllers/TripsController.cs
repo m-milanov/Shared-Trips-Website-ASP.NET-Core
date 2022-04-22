@@ -5,6 +5,7 @@ using SharedTrips.Models.Cities;
 using SharedTrips.Models.Trips;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -55,21 +56,29 @@ namespace SharedTrips.Controllers
             return RedirectToAction(nameof(All));
         }
 
-        public IActionResult All(int fromCityId, int toCityId, DateTime timeOfDeparture)
+        public IActionResult All([FromQuery]AllTripsViewModel query)
         {
             var tripsQuery = this.data.Trips.AsQueryable();
 
-            if(fromCityId != 0 && toCityId != 0 && timeOfDeparture.Date > DateTime.UtcNow.Date)
+            var q = Request.Query.ToList();
+
+            
+
+            if (query.FromCityId != 0 && query.ToCityId != 0 && query.TimeOfDeparture > DateTime.UtcNow)
             {
+
                 tripsQuery = tripsQuery.Where(t =>
-                t.FromCityId == fromCityId && 
-                t.ToCityId == toCityId && 
-                t.TimeOfDeparture.Date == timeOfDeparture.Date);
+                t.FromCityId == query.FromCityId && 
+                t.ToCityId == query.ToCityId && 
+                t.TimeOfDeparture.Date == query.TimeOfDeparture.Date);
+                
             }
 
-            var allTripsViewModel = new AllTripsViewModel();
+            var totalTrips = tripsQuery.Count();
 
-            allTripsViewModel.Trips = tripsQuery
+            query.Trips = tripsQuery
+                //.Skip((query.CurrentPage - 1) * query.TripsPerPage)
+                //.Take(query.TripsPerPage)
                 .OrderByDescending(t => t.Id)
                 .Select(t => new TripListingViewModel
                 {
@@ -78,22 +87,17 @@ namespace SharedTrips.Controllers
                     TimeOfDeparture = t.TimeOfDeparture,
                     MaxPassengers = t.MaxPassengers,
                     FromCity = t.FromCity.Name,
-                    ToCity = t.ToCity.Name
+                    ToCity = t.ToCity.Name,
                 }).ToList();
 
-            allTripsViewModel.Cities = this.data.Cities
-                .OrderBy(c => c.Name)
-                .Select(c => new CityViewModel
-                {
-                    Id = c.Id,
-                    Name = c.Name
-                });
-
-            return View(allTripsViewModel);
+            query.Cities = this.GetCities();
+            query.TotalTrips = totalTrips;
+            return View(query);
         }
 
         private IEnumerable<CityViewModel> GetCities()
             => this.data.Cities
+            .OrderBy(c => c.Name)
             .Select(c => new CityViewModel
             {
                 Id = c.Id,
