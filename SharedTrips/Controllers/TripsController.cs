@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SharedTrips.Data;
 using SharedTrips.Data.Models;
+using SharedTrips.Extensions;
 using SharedTrips.Models.Cities;
 using SharedTrips.Models.Trips;
 using System;
@@ -20,8 +22,14 @@ namespace SharedTrips.Controllers
             this.data = data;
         }
 
+        [Authorize]
         public IActionResult Add()
         {
+            if (!UserIsDriver())
+            {
+                return RedirectToAction(nameof(DriversController.Become), "Drivers");
+            }
+
             return View(new AddTripFormModel
             {
                 Cities = this.GetCities()
@@ -30,8 +38,19 @@ namespace SharedTrips.Controllers
         }
         
         [HttpPost]
+        [Authorize]
         public IActionResult Add(AddTripFormModel trip)
         {
+            var driver = this.data
+                .Drivers
+                .Where(d => d.UserId == this.User.GetId())
+                .FirstOrDefault();
+
+            if (driver == null)
+            {
+                return RedirectToAction(nameof(DriversController.Become), "Driver");
+            }
+
             ValidateTripFormModel(trip);
 
             if (!ModelState.IsValid)
@@ -48,6 +67,7 @@ namespace SharedTrips.Controllers
                 MaxPassengers = trip.MaxPassengers,
                 FromCityId = trip.FromCityId,
                 ToCityId = trip.ToCityId,
+                DriverId = driver.Id,
             };
 
             this.data.Trips.Add(dataTrip);
@@ -120,6 +140,10 @@ namespace SharedTrips.Controllers
                     "City not found");
             }
         }
+
+        private bool UserIsDriver()
+            => this.data.Drivers
+                .Any(d => d.UserId == this.User.GetId());
     }
 
 

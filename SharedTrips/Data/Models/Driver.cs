@@ -20,6 +20,7 @@ namespace SharedTrips.Data.Models
         [MaxLength(PhoneNumberMaxLength)]
         public string PhoneNumber { get; set; }
 
+        [Required]
         [Url]
         public string ProfilePictureUrl { get; set; }
 

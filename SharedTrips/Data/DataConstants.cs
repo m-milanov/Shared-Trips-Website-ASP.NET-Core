@@ -26,7 +26,10 @@
         public class Driver
         {
             public const int NameMaxLength = 30;
+            public const int NameMinLength = 2;
+
             public const int PhoneNumberMaxLength = 20;
+            public const int PhoneNumberMinLength = 6;
         }
 
        
