@@ -96,6 +96,9 @@ namespace SharedTrips.Controllers
 
             var totalTrips = tripsQuery.Count();
 
+
+            
+
             query.Trips = tripsQuery
                 //.Skip((query.CurrentPage - 1) * query.TripsPerPage)
                 //.Take(query.TripsPerPage)
@@ -108,6 +111,13 @@ namespace SharedTrips.Controllers
                     MaxPassengers = t.MaxPassengers,
                     FromCity = t.FromCity.Name,
                     ToCity = t.ToCity.Name,
+                    DriverListingViewModel = new DriverListingViewModel 
+                    { 
+                        Name = t.Driver.Name,
+                        ProfilePictureUrl = t.Driver.ProfilePictureUrl,
+                        Rateing = t.Driver.Feedbacks.Count() == 0 ? 0 : t.Driver.Feedbacks.Select(f => f.Rating).Sum() / t.Driver.Feedbacks.Count()
+                    }
+
                 }).ToList();
 
             query.Cities = this.GetCities();

@@ -20,5 +20,7 @@ namespace SharedTrips.Models.Trips
 
         public string ToCity { get; init; }
 
+        public DriverListingViewModel DriverListingViewModel { get; set; }
+
     }
 }
