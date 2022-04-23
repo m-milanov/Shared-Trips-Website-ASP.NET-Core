@@ -5,6 +5,7 @@ using SharedTrips.Data.Models;
 using SharedTrips.Extensions;
 using SharedTrips.Models.Cities;
 using SharedTrips.Models.Trips;
+using SharedTrips.Services.Trips;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -17,9 +18,12 @@ namespace SharedTrips.Controllers
     {
         private readonly SharedTripsDbContext data;
 
-        public TripsController(SharedTripsDbContext data)
+        private readonly ITripsService trips;
+
+        public TripsController(SharedTripsDbContext data, ITripsService trips)
         {
             this.data = data;
+            this.trips = trips;
         }
 
         [Authorize]
@@ -78,50 +82,29 @@ namespace SharedTrips.Controllers
 
         public IActionResult All([FromQuery]AllTripsViewModel query)
         {
-            var tripsQuery = this.data.Trips.AsQueryable();
+            var tripsService = this.trips.GetTrips(query.FromCityId, query.ToCityId, query.TimeOfDeparture);
 
-            var q = Request.Query.ToList();
-
-            
-
-            if (query.FromCityId != 0 && query.ToCityId != 0 && query.TimeOfDeparture > DateTime.UtcNow)
+            query.Trips = tripsService.Trips.Select(t => new TripListingViewModel
             {
+                Id = t.Id,
+                Price = t.Price,
+                FromCity = t.FromCity,
+                ToCity = t.ToCity,
+                TimeOfDeparture = t.TimeOfDeparture,
+                MaxPassengers = t.MaxPassengers,
+                DriverName = t.DriverName,
+                DriverPictureUrl = t.DriverPictureUrl,
+                DriverRating = t.DriverRating
 
-                tripsQuery = tripsQuery.Where(t =>
-                t.FromCityId == query.FromCityId && 
-                t.ToCityId == query.ToCityId && 
-                t.TimeOfDeparture.Date == query.TimeOfDeparture.Date);
-                
-            }
+            }).ToList();
 
-            var totalTrips = tripsQuery.Count();
+            query.TotalTrips = tripsService.TotalTrips;
+            query.Cities = tripsService.Cities.Select(c => new CityViewModel
+            {
+                Id = c.Id,
+                Name = c.Name
+            });
 
-
-            
-
-            query.Trips = tripsQuery
-                //.Skip((query.CurrentPage - 1) * query.TripsPerPage)
-                //.Take(query.TripsPerPage)
-                .OrderByDescending(t => t.Id)
-                .Select(t => new TripListingViewModel
-                {
-                    Id = t.Id,
-                    Price = t.Price,
-                    TimeOfDeparture = t.TimeOfDeparture,
-                    MaxPassengers = t.MaxPassengers,
-                    FromCity = t.FromCity.Name,
-                    ToCity = t.ToCity.Name,
-                    DriverListingViewModel = new DriverListingViewModel 
-                    { 
-                        Name = t.Driver.Name,
-                        ProfilePictureUrl = t.Driver.ProfilePictureUrl,
-                        Rateing = t.Driver.Feedbacks.Count() == 0 ? 0 : t.Driver.Feedbacks.Select(f => f.Rating).Sum() / t.Driver.Feedbacks.Count()
-                    }
-
-                }).ToList();
-
-            query.Cities = this.GetCities();
-            query.TotalTrips = totalTrips;
             return View(query);
         }
 

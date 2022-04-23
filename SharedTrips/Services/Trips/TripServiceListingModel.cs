@@ -1,12 +1,11 @@
-﻿using SharedTrips.Data.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SharedTrips.Models.Trips
+namespace SharedTrips.Services.Trips
 {
-    public class TripListingViewModel
+    public class TripServiceListingModel
     {
         public int Id { get; set; }
 
@@ -25,6 +24,5 @@ namespace SharedTrips.Models.Trips
         public string DriverPictureUrl { get; set; }
 
         public int DriverRating { get; set; }
-
     }
 }
