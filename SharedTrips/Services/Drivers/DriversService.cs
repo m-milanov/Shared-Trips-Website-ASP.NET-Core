@@ -1,4 +1,5 @@
 ﻿using SharedTrips.Data;
+using SharedTrips.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,22 @@ namespace SharedTrips.Services.Drivers
             this.data = data;
         }
 
+        public int AddDriver(string name, string phoneNumber, string profilePictureUrl, string userId)
+        {
+            var driverData = new Driver
+            {
+                Name = name,
+                PhoneNumber = phoneNumber,
+                ProfilePictureUrl = profilePictureUrl,
+                UserId = userId
+            };
+
+            this.data.Drivers.Add(driverData);
+            this.data.SaveChanges();
+
+            return driverData.Id;
+        }
+
         public int GetIdByUser(string userId)
             => this.data
                 .Drivers
@@ -25,5 +42,8 @@ namespace SharedTrips.Services.Drivers
         public bool UserIsDriver(string userId)
         => this.data.Drivers
                 .Any(d => d.UserId == userId);
+
+
+
     }
 }

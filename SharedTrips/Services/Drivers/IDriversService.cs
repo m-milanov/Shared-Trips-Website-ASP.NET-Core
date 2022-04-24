@@ -10,5 +10,8 @@ namespace SharedTrips.Services.Drivers
         public bool UserIsDriver (string userId);
 
         public int GetIdByUser(string userId);
+
+        public int AddDriver(string name, string phoneNumber, string profilePictureUrl, string userId);
+        
     }
 }

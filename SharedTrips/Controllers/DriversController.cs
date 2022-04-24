@@ -4,6 +4,7 @@ using SharedTrips.Data;
 using SharedTrips.Data.Models;
 using SharedTrips.Extensions;
 using SharedTrips.Models.Drivers;
+using SharedTrips.Services.Drivers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,22 +14,21 @@ namespace SharedTrips.Controllers
 {
     public class DriversController : Controller
     {
-        private readonly SharedTripsDbContext data;
+        private readonly IDriversService drivers;
 
-        public DriversController(SharedTripsDbContext data)
-            => this.data = data;
+        public DriversController(IDriversService drivers)
+            => this.drivers = drivers;
 
         public IActionResult Become()
-        {
+            => View();
 
-            return View();
-        }
+
 
         [HttpPost]
         [Authorize]
         public IActionResult Become(BecomeDriverFormModel driver)
         {
-            if (UserIsDriver())
+            if (drivers.UserIsDriver(this.User.GetId()))
             {
                 return BadRequest();
             }
@@ -38,22 +38,13 @@ namespace SharedTrips.Controllers
                 return View(driver);
             }
 
-            var driverData = new Driver
-            {
-                Name = driver.Name,
-                PhoneNumber = driver.PhoneNumber,
-                ProfilePictureUrl = driver.ProfilePictureUrl,
-                UserId = this.User.GetId()
-            };
-
-            this.data.Drivers.Add(driverData);
-            this.data.SaveChanges();
+            drivers.AddDriver(
+                driver.Name,
+                driver.PhoneNumber,
+                driver.ProfilePictureUrl,
+                this.User.GetId());
 
             return RedirectToAction("Index","Home");
         }
-
-        private bool UserIsDriver()
-           => this.data.Drivers
-               .Any(d => d.UserId == this.User.GetId());
     }
 }

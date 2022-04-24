@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SharedTrips.Data;
 using SharedTrips.Data.Models;
 using SharedTrips.Extensions;
 using SharedTrips.Models.Trips;
@@ -16,15 +15,12 @@ namespace SharedTrips.Controllers
 {
     public class TripsController : Controller
     {
-        private readonly SharedTripsDbContext data;
-
         private readonly ITripsService trips;
 
         private readonly IDriversService drivers;
 
-        public TripsController(SharedTripsDbContext data, ITripsService trips, IDriversService drivers)
+        public TripsController(ITripsService trips, IDriversService drivers)
         {
-            this.data = data;
             this.trips = trips;
             this.drivers = drivers;
         }
@@ -106,8 +102,8 @@ namespace SharedTrips.Controllers
                     "You must enter 2 different cities.");
             }
 
-            if (!data.Cities.Any(c => c.Id == trip.FromCityId)
-                || !data.Cities.Any(c => c.Id == trip.ToCityId))
+            if (!trips.GetCities().Any(c => c.Id == trip.FromCityId)
+                || !trips.GetCities().Any(c => c.Id == trip.ToCityId))
             {
                 this.ModelState.AddModelError(nameof(trip.FromCityId),
                     "City not found");
