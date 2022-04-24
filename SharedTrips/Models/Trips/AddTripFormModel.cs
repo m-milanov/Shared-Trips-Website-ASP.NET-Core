@@ -1,5 +1,5 @@
 ﻿using SharedTrips.Data.Models;
-using SharedTrips.Models.Cities;
+using SharedTrips.Services.Trips;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -27,6 +27,6 @@ namespace SharedTrips.Models.Trips
         public int ToCityId { get; set; }
 
         
-        public IEnumerable<CityViewModel> Cities { get; set; } = new List<CityViewModel>();
+        public IEnumerable<CityServiceModel> Cities { get; set; } = new List<CityServiceModel>();
     }
 }

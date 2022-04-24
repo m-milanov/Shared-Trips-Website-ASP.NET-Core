@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SharedTrips.Data.Models;
 
 namespace SharedTrips.Services.Trips
 {
@@ -52,7 +53,32 @@ namespace SharedTrips.Services.Trips
             return query;
         }
 
-        private IEnumerable<CityServiceModel> GetCities()
+        public int AddTrip(
+            int maxPassengers,
+            DateTime timeOfDeparture,
+            int price,
+            int fromCityId,
+            int toCityId,
+            int driverId)
+        {
+            var trip = new Trip
+            {
+                MaxPassengers = maxPassengers,
+                TimeOfDeparture = timeOfDeparture,
+                Price = price,
+                FromCityId = fromCityId,
+                ToCityId = toCityId,
+                DriverId = driverId
+            };
+
+            data.Trips.Add(trip);
+            data.SaveChanges();
+
+            return trip.Id;
+        }
+
+
+        public IEnumerable<CityServiceModel> GetCities()
             => this.data.Cities
             .OrderBy(c => c.Name)
             .Select(c => new CityServiceModel

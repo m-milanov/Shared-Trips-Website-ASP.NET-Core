@@ -1,5 +1,4 @@
-﻿using SharedTrips.Models.Cities;
-using SharedTrips.Models.Trips;
+﻿using SharedTrips.Models.Trips;
 using System;
 using System.Collections.Generic;
 using System.Linq;

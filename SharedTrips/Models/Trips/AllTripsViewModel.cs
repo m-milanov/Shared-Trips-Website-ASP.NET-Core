@@ -1,4 +1,4 @@
-﻿using SharedTrips.Models.Cities;
+﻿using SharedTrips.Services.Trips;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +20,7 @@ namespace SharedTrips.Models.Trips
 
         public DateTime TimeOfDeparture { get; set; }
 
-        public IEnumerable<CityViewModel> Cities { get; set; }
+        public IEnumerable<CityServiceModel> Cities { get; set; }
 
         public List<TripListingViewModel> Trips { get; set; }
     }

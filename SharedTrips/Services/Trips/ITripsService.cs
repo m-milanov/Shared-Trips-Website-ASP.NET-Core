@@ -8,5 +8,10 @@ namespace SharedTrips.Services.Trips
     public interface ITripsService
     {
         public AllTripsServiceModel GetTrips(int fromCityId, int toCityId, DateTime timeOfDeparture);
+
+        public int AddTrip(int maxPassengers, DateTime timeOfDeparture,
+            int price, int fromcityId, int toCityId, int driverId);
+
+        public IEnumerable<CityServiceModel> GetCities(); 
     }
 }

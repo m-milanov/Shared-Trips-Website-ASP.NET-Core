@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SharedTrips.Data;
 using SharedTrips.Extensions;
+using SharedTrips.Services.Drivers;
 using SharedTrips.Services.Trips;
 using System;
 using System.Collections.Generic;
@@ -47,6 +48,7 @@ namespace SharedTrips
             services.AddControllersWithViews();
 
             services.AddTransient<ITripsService, TripsService>();
+            services.AddTransient<IDriversService, DriversService>();
 
         }
 

@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using SharedTrips.Data;
 using SharedTrips.Data.Models;
 using SharedTrips.Extensions;
-using SharedTrips.Models.Cities;
 using SharedTrips.Models.Trips;
+using SharedTrips.Services.Drivers;
 using SharedTrips.Services.Trips;
 using System;
 using System.Collections.Generic;
@@ -20,37 +20,35 @@ namespace SharedTrips.Controllers
 
         private readonly ITripsService trips;
 
-        public TripsController(SharedTripsDbContext data, ITripsService trips)
+        private readonly IDriversService drivers;
+
+        public TripsController(SharedTripsDbContext data, ITripsService trips, IDriversService drivers)
         {
             this.data = data;
             this.trips = trips;
+            this.drivers = drivers;
         }
 
         [Authorize]
         public IActionResult Add()
         {
-            if (!UserIsDriver())
+            if (!drivers.UserIsDriver(this.User.GetId()))
             {
                 return RedirectToAction(nameof(DriversController.Become), "Drivers");
             }
 
             return View(new AddTripFormModel
             {
-                Cities = this.GetCities()
+                Cities = this.trips.GetCities()
             });
 
         }
-        
+
         [HttpPost]
         [Authorize]
         public IActionResult Add(AddTripFormModel trip)
         {
-            var driver = this.data
-                .Drivers
-                .Where(d => d.UserId == this.User.GetId())
-                .FirstOrDefault();
-
-            if (driver == null)
+            if (!drivers.UserIsDriver(this.User.GetId()))
             {
                 return RedirectToAction(nameof(DriversController.Become), "Driver");
             }
@@ -59,30 +57,29 @@ namespace SharedTrips.Controllers
 
             if (!ModelState.IsValid)
             {
-                trip.Cities = this.GetCities();
+                trip.Cities = this.trips.GetCities();
                 return View(trip);
 
             }
 
-            var dataTrip = new Trip
-            {
-                Price = trip.Price,
-                TimeOfDeparture = trip.TimeOfDeparture,
-                MaxPassengers = trip.MaxPassengers,
-                FromCityId = trip.FromCityId,
-                ToCityId = trip.ToCityId,
-                DriverId = driver.Id,
-            };
-
-            this.data.Trips.Add(dataTrip);
-            this.data.SaveChanges();
+            trips.AddTrip(
+                trip.MaxPassengers,
+                trip.TimeOfDeparture,
+                trip.Price,
+                trip.FromCityId,
+                trip.ToCityId,
+                drivers.GetIdByUser(this.User.GetId()));
 
             return RedirectToAction(nameof(All));
         }
 
-        public IActionResult All([FromQuery]AllTripsViewModel query)
+        public IActionResult All([FromQuery] AllTripsViewModel query)
         {
             var tripsService = this.trips.GetTrips(query.FromCityId, query.ToCityId, query.TimeOfDeparture);
+
+            query.TotalTrips = tripsService.TotalTrips;
+
+            query.Cities = tripsService.Cities;
 
             query.Trips = tripsService.Trips.Select(t => new TripListingViewModel
             {
@@ -98,25 +95,8 @@ namespace SharedTrips.Controllers
 
             }).ToList();
 
-            query.TotalTrips = tripsService.TotalTrips;
-            query.Cities = tripsService.Cities.Select(c => new CityViewModel
-            {
-                Id = c.Id,
-                Name = c.Name
-            });
-
             return View(query);
         }
-
-        private IEnumerable<CityViewModel> GetCities()
-            => this.data.Cities
-            .OrderBy(c => c.Name)
-            .Select(c => new CityViewModel
-            {
-                Id = c.Id,
-                Name = c.Name
-            })
-            .ToList();
 
         private void ValidateTripFormModel(AddTripFormModel trip)
         {
@@ -133,11 +113,5 @@ namespace SharedTrips.Controllers
                     "City not found");
             }
         }
-
-        private bool UserIsDriver()
-            => this.data.Drivers
-                .Any(d => d.UserId == this.User.GetId());
     }
-
-
 }
