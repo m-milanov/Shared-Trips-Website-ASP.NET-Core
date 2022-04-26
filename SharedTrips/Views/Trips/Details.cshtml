@@ -1,0 +1,237 @@
+﻿@model TripDetailsViewModel
+
+    <div class="row my-4">
+        <div class="col-md">
+            <div class="row">
+                <div class="col">
+                    <span class="text-muted">Details for</span>
+                </div>
+            </div>
+            <div class="row mb-0 mb-md-3">
+                <div class="col">
+                    <h3>Trip</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7 col-lg-5 my-3 my-md-0">
+            <div class="row">
+                <div class="ml-auto col-12 col-md-6 col-xl-5">
+                    <button class="btn btn-success btn-block">
+                        <i class="fa-solid fa-user-plus align-bottom md-24"></i> Send request
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-7">
+            <p class="text-muted">Trip info</p>
+            <div class="card mb-3">
+                <div class="card-header bg-white">
+                    <div class="row mt-2">
+                        <div class="col-auto">
+                            <span class="h5">
+                                <i class="fa-solid fa-location-dot text-success md-18"></i>
+                                <span class="text-muted align-top">From</span>
+                                <span class="align-top">@Model.Trip.FromCityName</span>
+                            </span>
+                        </div>
+                        <div class="col-auto d-md-block">
+                            <i class="fa-solid fa-angles-right"></i>
+                        </div>
+                        <div class="col-auto">
+                            <span class="h5">
+                                <i class="fa-solid fa-location-dot text-success md-18"></i>
+                                <span class="text-muted align-top">To</span>
+                                <span class="align-top">@Model.Trip.ToCityName</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-xl-6">
+                            <i class="fa-solid fa-calendar-days text-success md-18"></i>
+                            <span class="text-muted align-top">Date: </span>
+                            <span class="align-top">@Model.Trip.TimeOfDeparture.ToShortDateString()</span>
+                        </div>
+                        <div class="col-12 col-xl-6">
+                            <i class="fa-solid fa-clock text-success md-18"></i>
+                            <span class="text-muted align-top">Time:</span>
+                            <span class="align-top">@Model.Trip.TimeOfDeparture.ToShortTimeString()</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-xl-6">
+                            <i class="fa-solid fa-money-bill-1-wave text-success md-18"></i>
+                            <span class="text-muted align-top">Price per person: </span>
+                            <span class="align-top">@Model.Trip.Price lv.</span>
+                        </div>
+                        <div class="col-12 d-block d-lg-none">
+                            <i class="material-icons text-success"></i>
+                            <span class="text-muted align-top">Car: </span>
+                            <span class="align-top">@Model.Car.Brand @Model.Car.Model</span>
+                        </div>
+                        <div class="col-12 col-xl-6">
+                            <i class="fa-solid fa-users text-success md-18"></i>
+                            <span class="text-muted align-top">Free seats:</span>
+                            <span class="align-top">@Model.Trip.MaxPassengers <span class="text-muted align-top">from</span> @Model.Trip.MaxPassengers</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-block d-lg-none">
+                <p class="text-muted">Driver info</p>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-sm-auto mb-3 mb-sm-0">
+                                <div class="d-flex flex-row justify-content-center">
+                                    <a href="#">
+                                        <img src="@Model.Driver.ProfilePictureUrl" alt="Profile Picture" class="rounded-circle img-fluid profile-picture pp-large pp-sm-small">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm">
+                                <a class="text-link" href="#">
+                                    <span class="h5">@Model.Driver.Name</span>
+                                </a>
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <div class="text-muted">Rating</div>
+                                        <h5 class="d-inline">
+                                            <i class="fa-regular fa-star"></i>
+                                            <i class="fa-regular fa-star"></i>
+                                            <i class="fa-regular fa-star"></i>
+                                            <i class="fa-regular fa-star"></i>
+                                            <i class="fa-regular fa-star"></i>
+                                        </h5>
+                                        <span class="text-muted">
+                                            / @Model.Driver.Feedbacks.Count() 
+                                            <span>rates</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row text-center text-success mb-3">
+                            <div class="col-6">
+                                <div class="thin-border py-2">
+                                    <i class="fa-solid fa-steering-wheel" style="font-size: larger; top:3px;"></i>
+                                    <span>@Model.Driver.TimesDriver times</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <i class="fa-solid fa-phone text-success md-24"></i>
+                                <span class="text-muted align-top">Phone number:</span>
+                                <span class="align-top">@Model.Driver.PhoneNumber</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-muted ">Car info</p>
+
+            <div class="card  mb-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 col-lg-4 mb-3 mb-md-0">
+                            <div class="d-flex flex-row justify-content-center">
+                                <img src="@Model.Car.ImgUrl" alt="Car image" class="card-img">
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-lg-8">
+                            <div class="row">
+                                <div class="col-12 col-xl-6">
+                                    <span class="text-muted">Brand: </span>
+                                    <span>@Model.Car.Brand</span>
+                                </div>
+                                <div class="col-12 col-xl-6">
+                                    <span class="text-muted">Model: </span>
+                                    <span>@Model.Car.Model</span>
+                                </div>
+                                <div class="col-12 col-xl-6">
+                                    <span class="text-muted">Year: </span>
+                                    <span>@Model.Car.Year</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="d-none d-lg-block">
+                <p class="text-muted">Driver info:</p>
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-sm-auto mb-3 mb-sm-0">
+                                <div class="d-flex flex-row justify-content-center">
+                                    <a href="#">
+                                        <img src="@Model.Driver.ProfilePictureUrl" alt="Profile picture" class="rounded-circle img-fluid profile-picture pp-large pp-sm-small">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm">
+                                <a class="text-link my-20 " href="#">
+                                    <span class="h4">@Model.Driver.Name</span>
+                                </a>
+                                <div class="row my-3">
+                                    <div class="col">
+                                        <div class="text-muted ">Rating</div>
+                                        <h5 class="d-inline">
+                                            <i class="fa-regular fa-star"></i>
+                                            <i class="fa-regular fa-star"></i>
+                                            <i class="fa-regular fa-star"></i>
+                                            <i class="fa-regular fa-star"></i>
+                                            <i class="fa-regular fa-star"></i>
+                                        </h5>
+                                        <span class="text-muted">
+                                            / @Model.Driver.Feedbacks.Count()
+                                            <span>rates</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row text-center text-success mb-3">
+                            <div class="col-6">
+                                <div class="thin-border py-2">
+                                    <i class="fa-solid fa-steering-wheel" style="font-size: larger; top:3px;"></i>
+                                    <span>Have been driver @Model.Driver.TimesDriver times</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <i class="fa-solid fa-phone text-success md-24"></i>
+                                <span class="text-muted align-top">Phone number:</span>
+                                <span class="align-top">@Model.Driver.PhoneNumber</span>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <p class="text-muted">Passengers</p>
+
+            <div class="card mb-3">
+                <div class="card-body">
+
+                    <span>There are no approved passengers.</span>
+
+                </div>
+            </div>
+        </div>
+    </div>

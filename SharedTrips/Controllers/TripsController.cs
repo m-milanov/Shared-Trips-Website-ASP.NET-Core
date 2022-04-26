@@ -100,6 +100,22 @@ namespace SharedTrips.Controllers
             return View(query);
         }
 
+        public IActionResult Details(int id)
+        {
+            var tripDetails = this.trips.GetTripDetails(id);
+            var driverDetails = this.drivers.GetDriverForTrip(id);
+            var carDetails = this.cars.GetCarForTrip(id);
+
+            var details = new TripDetailsViewModel
+            {
+                Trip = tripDetails,
+                Driver = driverDetails,
+                Car = carDetails
+            };
+
+            return View(details);
+       }
+
         private void ValidateTripFormModel(AddTripFormModel trip)
         {
             if (trip.FromCityId == trip.ToCityId)

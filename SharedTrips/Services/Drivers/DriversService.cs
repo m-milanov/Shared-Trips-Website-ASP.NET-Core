@@ -39,11 +39,27 @@ namespace SharedTrips.Services.Drivers
                 .Select(d => d.Id)
                 .FirstOrDefault();
 
+        public DriverServiceModel GetDriverForTrip(int tripId)
+            => this.data.Trips
+            .Where(t => t.Id == tripId)
+            .Select(t => new DriverServiceModel
+            {
+                Name = t.Driver.Name,
+                PhoneNumber = t.Driver.PhoneNumber,
+                ProfilePictureUrl = t.Driver.ProfilePictureUrl,
+                TimesDriver = t.Driver.TimesDriver,
+                Feedbacks = t.Driver.Feedbacks
+                .Select(f => new FeedbackServiceModel
+                {
+                    Rating = f.Rating,
+                    Comment = f.Comment
+                })
+            })
+            .FirstOrDefault();
+
         public bool UserIsDriver(string userId)
         => this.data.Drivers
                 .Any(d => d.UserId == userId);
-
-
 
     }
 }

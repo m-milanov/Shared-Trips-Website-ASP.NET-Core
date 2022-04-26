@@ -52,5 +52,17 @@ namespace SharedTrips.Services.Cars
             })
             .ToList();
 
+        public CarServiceModel GetCarForTrip(int tripId)
+            => data.Trips
+            .Where(t => t.Id == tripId)
+            .Select(t => new CarServiceModel
+            {
+                Brand = t.Car.Brand,
+                Model = t.Car.Model,
+                Year = t.Car.Year,
+                ImgUrl = t.Car.ImgUrl
+            })
+            .FirstOrDefault();
+
     }
 }

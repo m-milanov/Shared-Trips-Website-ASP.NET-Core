@@ -12,5 +12,7 @@ namespace SharedTrips.Services.Cars
         public string GetName(int carId);
 
         public List<CarServiceModel> GetCarsForDriver(int driverId);
+
+        public CarServiceModel GetCarForTrip(int tripId);
     }
 }

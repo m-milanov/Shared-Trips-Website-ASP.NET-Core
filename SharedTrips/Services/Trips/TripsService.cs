@@ -79,7 +79,18 @@ namespace SharedTrips.Services.Trips
 
             return trip.Id;
         }
-
+        public TripDetailsServiceModel GetTripDetails(int tripId)
+            => this.data.Trips
+            .Where(t => t.Id == tripId)
+            .Select(t => new TripDetailsServiceModel
+            {
+                Price = t.Price,
+                MaxPassengers = t.MaxPassengers,
+                TimeOfDeparture = t.TimeOfDeparture,
+                FromCityName = t.FromCity.Name,
+                ToCityName = t.ToCity.Name
+            })
+            .First();
 
         public IEnumerable<CityServiceModel> GetCities()
             => this.data.Cities
@@ -90,5 +101,7 @@ namespace SharedTrips.Services.Trips
                 Name = c.Name
             })
             .ToList();
+
+       
     }
 }
