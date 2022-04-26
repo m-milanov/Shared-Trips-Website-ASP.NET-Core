@@ -14,7 +14,7 @@ namespace SharedTrips.Data.Models
 
         [Required]
         [MaxLength(NameMaxLength)]
-        public string Name { get; set; }
+        public string Name { get; set; } 
 
         [Required]
         [MaxLength(PhoneNumberMaxLength)]

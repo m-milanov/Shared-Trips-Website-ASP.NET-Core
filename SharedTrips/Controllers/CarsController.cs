@@ -51,7 +51,29 @@ namespace SharedTrips.Controllers
 
             cars.Add(car.Brand, car.Model, car.Year, car.ImgUrl, driverId);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Cars", "UserCars");
+        }
+
+        [Authorize]
+        public IActionResult UserCars()
+        {
+            if (!drivers.UserIsDriver(this.User.GetId()))
+            {
+                return RedirectToAction(nameof(DriversController.Become), "Driver");
+            }
+
+            var cars = this.cars
+                .GetCarsForDriver(this.drivers.GetIdByUser(this.User.GetId()))
+                .Select(c => new CarViewModel
+                {
+                    Id = c.Id,
+                    Brand = c.Brand,
+                    Model = c.Model,
+                    Year = c.Year,
+                    ImgUrl = c.ImgUrl
+                });
+
+            return View(cars);
         }
     }
 }
