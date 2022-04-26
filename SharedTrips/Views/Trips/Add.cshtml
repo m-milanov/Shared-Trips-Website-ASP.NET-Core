@@ -24,8 +24,7 @@
         </div>
         
         <div class="form-row">
-
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
                 <label asp-for="FromCityId">From City:</label>
                 <select asp-for="FromCityId" class="form-control">
                     @foreach (var city in Model.Cities)
@@ -35,9 +34,8 @@
                 </select>
                 <span asp-validation-for="FromCityId" class="small text-danger"></span>
             </div>
-
-            <div class="form-group col-md-6">
-                <label asp-for="ToCityId">To City</label>
+            <div class="form-group col-md-4">
+                <label asp-for="ToCityId">To City:</label>
                 <select asp-for="ToCityId" class="form-control">
                     @foreach (var city in Model.Cities)
                     {
@@ -46,9 +44,18 @@
                 </select>
                 <span asp-validation-for="ToCityId" class="small text-danger"></span>
             </div>
-
+            <div class="form-group col-md-4">
+                <label asp-for="CarId">Car:</label>
+                <select asp-for="CarId" class="form-control">
+                    @foreach (var car in Model.Cars)
+                    {
+                        var carName = car.Brand + ' ' + car.Model + ' ' + car.Year;
+                        <option value="@car.Id">@carName</option>
+                    }
+                </select>
+                <span asp-validation-for="CarId" class="small text-danger"></span>
+            </div>
         </div>
-        
 
         <button type="submit" class="btn btn-primary">Add</button>
     </form>

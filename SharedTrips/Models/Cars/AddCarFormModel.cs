@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 using static SharedTrips.Data.DataConstants.Car;
 
-namespace SharedTrips.Data.Models
-{
-    public class Car
-    {
-        public int Id { get; set; }
 
+namespace SharedTrips.Models.Cars
+{
+    public class AddCarFormModel
+    {
         [Required]
         [MaxLength(BrandMaxLength)]
         public string Brand { get; set; }
@@ -26,13 +24,7 @@ namespace SharedTrips.Data.Models
         public string ImgUrl { get; set; }
 
         [Required]
+        [Range(YearMinVal, YearMaxVal)]
         public int Year { get; set; }
-
-        [Required]
-        public int DriverId { get; set; }
-
-        public Driver Driver { get; set; }
-
-        public List<Trip> Trips { get; set; }
     }
 }

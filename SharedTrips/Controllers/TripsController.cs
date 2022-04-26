@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SharedTrips.Data.Models;
 using SharedTrips.Extensions;
 using SharedTrips.Models.Trips;
+using SharedTrips.Services.Cars;
 using SharedTrips.Services.Drivers;
 using SharedTrips.Services.Trips;
 using System;
@@ -19,10 +20,13 @@ namespace SharedTrips.Controllers
 
         private readonly IDriversService drivers;
 
-        public TripsController(ITripsService trips, IDriversService drivers)
+        private readonly ICarsService cars;
+
+        public TripsController(ITripsService trips, IDriversService drivers, ICarsService cars)
         {
             this.trips = trips;
             this.drivers = drivers;
+            this.cars = cars;
         }
 
         [Authorize]
@@ -35,8 +39,9 @@ namespace SharedTrips.Controllers
 
             return View(new AddTripFormModel
             {
-                Cities = this.trips.GetCities()
-            });
+                Cities = this.trips.GetCities(),
+                Cars = cars.GetCarsForDriver(this.drivers.GetIdByUser(this.User.GetId()))
+            }); 
 
         }
 
@@ -54,8 +59,8 @@ namespace SharedTrips.Controllers
             if (!ModelState.IsValid)
             {
                 trip.Cities = this.trips.GetCities();
+                trip.Cars = cars.GetCarsForDriver(this.drivers.GetIdByUser(this.User.GetId()));
                 return View(trip);
-
             }
 
             trips.AddTrip(
@@ -64,7 +69,8 @@ namespace SharedTrips.Controllers
                 trip.Price,
                 trip.FromCityId,
                 trip.ToCityId,
-                drivers.GetIdByUser(this.User.GetId()));
+                drivers.GetIdByUser(this.User.GetId()),
+                trip.CarId);
 
             return RedirectToAction(nameof(All));
         }
@@ -87,8 +93,8 @@ namespace SharedTrips.Controllers
                 MaxPassengers = t.MaxPassengers,
                 DriverName = t.DriverName,
                 DriverPictureUrl = t.DriverPictureUrl,
-                DriverRating = t.DriverRating
-
+                DriverRating = t.DriverRating,
+                CarName = this.cars.GetName(t.CarId)
             }).ToList();
 
             return View(query);

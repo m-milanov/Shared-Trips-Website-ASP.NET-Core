@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SharedTrips.Migrations
 {
-    public partial class TripsAdnCitiesRelationUpdate : Migration
+    public partial class TripsAndCarsConnected2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -44,22 +44,6 @@ namespace SharedTrips.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Cars",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Brand = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Model = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    ImgUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Year = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cars", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -182,20 +166,95 @@ namespace SharedTrips.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Drivers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    ProfilePictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TimesDriver = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Drivers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Drivers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cars",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Brand = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Model = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    ImgUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Year = table.Column<int>(type: "int", nullable: false),
+                    DriverId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cars", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cars_Drivers_DriverId",
+                        column: x => x.DriverId,
+                        principalTable: "Drivers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Feedbacks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DriverId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Feedbacks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Feedbacks_Drivers_DriverId",
+                        column: x => x.DriverId,
+                        principalTable: "Drivers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Trips",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MaxPassengers = table.Column<int>(type: "int", maxLength: 6, nullable: false),
+                    MaxPassengers = table.Column<int>(type: "int", nullable: false),
                     TimeOfDeparture = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Price = table.Column<int>(type: "int", maxLength: 100, nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false),
                     FromCityId = table.Column<int>(type: "int", nullable: false),
-                    ToCityId = table.Column<int>(type: "int", nullable: false)
+                    ToCityId = table.Column<int>(type: "int", nullable: false),
+                    DriverId = table.Column<int>(type: "int", nullable: false),
+                    CarId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Trips", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Trips_Cars_CarId",
+                        column: x => x.CarId,
+                        principalTable: "Cars",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Trips_Cities_FromCityId",
                         column: x => x.FromCityId,
@@ -206,6 +265,12 @@ namespace SharedTrips.Migrations
                         name: "FK_Trips_Cities_ToCityId",
                         column: x => x.ToCityId,
                         principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Trips_Drivers_DriverId",
+                        column: x => x.DriverId,
+                        principalTable: "Drivers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -250,6 +315,32 @@ namespace SharedTrips.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cars_DriverId",
+                table: "Cars",
+                column: "DriverId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Drivers_UserId",
+                table: "Drivers",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Feedbacks_DriverId",
+                table: "Feedbacks",
+                column: "DriverId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Trips_CarId",
+                table: "Trips",
+                column: "CarId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Trips_DriverId",
+                table: "Trips",
+                column: "DriverId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Trips_FromCityId",
                 table: "Trips",
                 column: "FromCityId");
@@ -278,7 +369,7 @@ namespace SharedTrips.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Cars");
+                name: "Feedbacks");
 
             migrationBuilder.DropTable(
                 name: "Trips");
@@ -287,10 +378,16 @@ namespace SharedTrips.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Cars");
 
             migrationBuilder.DropTable(
                 name: "Cities");
+
+            migrationBuilder.DropTable(
+                name: "Drivers");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

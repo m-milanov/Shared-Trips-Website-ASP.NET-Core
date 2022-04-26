@@ -24,5 +24,7 @@ namespace SharedTrips.Services.Trips
         public string DriverPictureUrl { get; set; }
 
         public int DriverRating { get; set; }
+
+        public int CarId { get; set; }
     }
 }

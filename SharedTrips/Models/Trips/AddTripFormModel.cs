@@ -1,4 +1,5 @@
 ﻿using SharedTrips.Data.Models;
+using SharedTrips.Services.Cars;
 using SharedTrips.Services.Trips;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,9 @@ namespace SharedTrips.Models.Trips
 
         public int ToCityId { get; set; }
 
+        public int CarId { get; set; }
+
+        public IEnumerable<CarServiceModel> Cars { get; set; }
         
         public IEnumerable<CityServiceModel> Cities { get; set; } = new List<CityServiceModel>();
     }

@@ -10,8 +10,8 @@ using SharedTrips.Data;
 namespace SharedTrips.Migrations
 {
     [DbContext(typeof(SharedTripsDbContext))]
-    [Migration("20220419225402_TripsAdnCitiesRelationUpdate")]
-    partial class TripsAdnCitiesRelationUpdate
+    [Migration("20220426002523_TripsAndCarsConnected2")]
+    partial class TripsAndCarsConnected2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -233,6 +233,9 @@ namespace SharedTrips.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<int>("DriverId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ImgUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -246,6 +249,8 @@ namespace SharedTrips.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DriverId");
 
                     b.ToTable("Cars");
                 });
@@ -265,6 +270,65 @@ namespace SharedTrips.Migrations
                     b.ToTable("Cities");
                 });
 
+            modelBuilder.Entity("SharedTrips.Data.Models.Driver", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("ProfilePictureUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TimesDriver")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Drivers");
+                });
+
+            modelBuilder.Entity("SharedTrips.Data.Models.Feedback", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DriverId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DriverId");
+
+                    b.ToTable("Feedbacks");
+                });
+
             modelBuilder.Entity("SharedTrips.Data.Models.Trip", b =>
                 {
                     b.Property<int>("Id")
@@ -272,15 +336,19 @@ namespace SharedTrips.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("CarId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DriverId")
+                        .HasColumnType("int");
+
                     b.Property<int>("FromCityId")
                         .HasColumnType("int");
 
                     b.Property<int>("MaxPassengers")
-                        .HasMaxLength(6)
                         .HasColumnType("int");
 
                     b.Property<int>("Price")
-                        .HasMaxLength(100)
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TimeOfDeparture")
@@ -290,6 +358,10 @@ namespace SharedTrips.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CarId");
+
+                    b.HasIndex("DriverId");
 
                     b.HasIndex("FromCityId");
 
@@ -349,8 +421,51 @@ namespace SharedTrips.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SharedTrips.Data.Models.Car", b =>
+                {
+                    b.HasOne("SharedTrips.Data.Models.Driver", "Driver")
+                        .WithMany("Cars")
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Driver");
+                });
+
+            modelBuilder.Entity("SharedTrips.Data.Models.Driver", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithOne()
+                        .HasForeignKey("SharedTrips.Data.Models.Driver", "UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SharedTrips.Data.Models.Feedback", b =>
+                {
+                    b.HasOne("SharedTrips.Data.Models.Driver", "Driver")
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Driver");
+                });
+
             modelBuilder.Entity("SharedTrips.Data.Models.Trip", b =>
                 {
+                    b.HasOne("SharedTrips.Data.Models.Car", "Car")
+                        .WithMany("Trips")
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SharedTrips.Data.Models.Driver", "Driver")
+                        .WithMany()
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SharedTrips.Data.Models.City", "FromCity")
                         .WithMany("StartOfTrip")
                         .HasForeignKey("FromCityId")
@@ -363,9 +478,18 @@ namespace SharedTrips.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Car");
+
+                    b.Navigation("Driver");
+
                     b.Navigation("FromCity");
 
                     b.Navigation("ToCity");
+                });
+
+            modelBuilder.Entity("SharedTrips.Data.Models.Car", b =>
+                {
+                    b.Navigation("Trips");
                 });
 
             modelBuilder.Entity("SharedTrips.Data.Models.City", b =>
@@ -373,6 +497,13 @@ namespace SharedTrips.Migrations
                     b.Navigation("EndOfTrip");
 
                     b.Navigation("StartOfTrip");
+                });
+
+            modelBuilder.Entity("SharedTrips.Data.Models.Driver", b =>
+                {
+                    b.Navigation("Cars");
+
+                    b.Navigation("Feedbacks");
                 });
 #pragma warning restore 612, 618
         }

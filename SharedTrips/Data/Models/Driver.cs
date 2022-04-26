@@ -26,8 +26,6 @@ namespace SharedTrips.Data.Models
 
         public int TimesDriver { get; set; }
 
-        public int TimesPassenger { get; set; }
-
         public IEnumerable<Feedback> Feedbacks { get; set; }
 
         public IEnumerable<Car> Cars { get; set; }

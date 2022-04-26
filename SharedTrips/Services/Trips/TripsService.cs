@@ -44,7 +44,8 @@ namespace SharedTrips.Services.Trips
                     ToCity = t.ToCity.Name,
                     DriverName = t.Driver.Name,
                     DriverPictureUrl = t.Driver.ProfilePictureUrl,
-                    DriverRating = t.Driver.Feedbacks.Count() == 0 ? 0 : t.Driver.Feedbacks.Select(f => f.Rating).Sum() / t.Driver.Feedbacks.Count()
+                    DriverRating = t.Driver.Feedbacks.Count() == 0 ? 0 : t.Driver.Feedbacks.Select(f => f.Rating).Sum() / t.Driver.Feedbacks.Count(),
+                    CarId = t.Car.Id
                 }).ToList();
 
             query.Cities = this.GetCities();
@@ -59,7 +60,8 @@ namespace SharedTrips.Services.Trips
             int price,
             int fromCityId,
             int toCityId,
-            int driverId)
+            int driverId,
+            int carId)
         {
             var trip = new Trip
             {
@@ -68,7 +70,8 @@ namespace SharedTrips.Services.Trips
                 Price = price,
                 FromCityId = fromCityId,
                 ToCityId = toCityId,
-                DriverId = driverId
+                DriverId = driverId,
+                Car = this.data.Cars.Where(c => c.Id == carId).FirstOrDefault()
             };
 
             data.Trips.Add(trip);

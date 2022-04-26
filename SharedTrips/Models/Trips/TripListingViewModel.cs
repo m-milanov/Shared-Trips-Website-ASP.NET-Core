@@ -26,5 +26,7 @@ namespace SharedTrips.Models.Trips
 
         public int DriverRating { get; set; }
 
+        public string CarName { get; set; }
+
     }
 }

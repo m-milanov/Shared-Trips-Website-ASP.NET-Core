@@ -286,12 +286,10 @@ namespace SharedTrips.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("ProfilePictureUrl")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TimesDriver")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TimesPassenger")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
@@ -336,6 +334,9 @@ namespace SharedTrips.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("CarId")
+                        .HasColumnType("int");
+
                     b.Property<int>("DriverId")
                         .HasColumnType("int");
 
@@ -355,6 +356,8 @@ namespace SharedTrips.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CarId");
 
                     b.HasIndex("DriverId");
 
@@ -449,6 +452,12 @@ namespace SharedTrips.Migrations
 
             modelBuilder.Entity("SharedTrips.Data.Models.Trip", b =>
                 {
+                    b.HasOne("SharedTrips.Data.Models.Car", "Car")
+                        .WithMany("Trips")
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("SharedTrips.Data.Models.Driver", "Driver")
                         .WithMany()
                         .HasForeignKey("DriverId")
@@ -467,11 +476,18 @@ namespace SharedTrips.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Car");
+
                     b.Navigation("Driver");
 
                     b.Navigation("FromCity");
 
                     b.Navigation("ToCity");
+                });
+
+            modelBuilder.Entity("SharedTrips.Data.Models.Car", b =>
+                {
+                    b.Navigation("Trips");
                 });
 
             modelBuilder.Entity("SharedTrips.Data.Models.City", b =>
