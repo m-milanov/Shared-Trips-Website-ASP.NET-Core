@@ -24,7 +24,7 @@ namespace SharedTrips.Services.Cars
                 Model = model,
                 Year = year,
                 ImgUrl = imgUrl,
-                DriverId = driverId
+                DriverId = driverId,
             };
 
             data.Cars.Add(car);
@@ -38,6 +38,38 @@ namespace SharedTrips.Services.Cars
             .Where(c => c.Id == carId)
             .Select(c => c.Brand + " " + c.Model + " " + c.Year)
             .First();
+
+        public CarServiceModel GetCar(int carId)
+            => this.data.Cars
+                .Where(c => c.Id == carId)
+                .Select(c => new CarServiceModel
+                {
+                    Id = c.Id,
+                    Brand = c.Brand,
+                    Model = c.Model,
+                    Year = c.Year,
+                    ImgUrl = c.ImgUrl,
+                    
+                })
+                .First();
+        public bool SaveCar(int id, string brand, string model, int year, string imgUrl)
+        {
+            var car = this.data.Cars.Where(c => c.Id == id).FirstOrDefault();
+
+            if(car == null)
+            {
+                return false;
+            }
+
+            car.Brand = brand;
+            car.Model = model;
+            car.Year = year;
+            car.ImgUrl = imgUrl;
+
+            this.data.SaveChanges();
+
+            return true;
+        }
 
         public List<CarServiceModel> GetCarsForDriver(int driverId)
             => data.Cars
@@ -64,5 +96,6 @@ namespace SharedTrips.Services.Cars
             })
             .FirstOrDefault();
 
+        
     }
 }

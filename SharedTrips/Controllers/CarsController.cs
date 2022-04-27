@@ -39,7 +39,7 @@ namespace SharedTrips.Controllers
         {
             if (!drivers.UserIsDriver(this.User.GetId()))
             {
-                return RedirectToAction(nameof(DriversController.Become), "Driver");
+                return RedirectToAction(nameof(DriversController.Become), "Drivers");
             }
 
             if (!ModelState.IsValid)
@@ -59,7 +59,7 @@ namespace SharedTrips.Controllers
         {
             if (!drivers.UserIsDriver(this.User.GetId()))
             {
-                return RedirectToAction(nameof(DriversController.Become), "Driver");
+                return RedirectToAction(nameof(DriversController.Become), "Drivers");
             }
 
             var cars = this.cars
@@ -74,6 +74,44 @@ namespace SharedTrips.Controllers
                 });
 
             return View(cars);
+        }
+
+        [Authorize]
+        public IActionResult Edit(int id)
+        {
+            if(!this.cars.GetCarsForDriver(this.drivers.GetIdByUser(this.User.GetId())).Any(c => c.Id == id))
+            {
+                return BadRequest();
+            }
+
+            var car = cars.GetCar(id);
+
+            return View(
+            new EditCarFormModel
+            {
+                Id = id,
+                Brand = car.Brand,
+                Model = car.Model,
+                Year = car.Year,
+                ImgUrl = car.ImgUrl
+            });
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult Edit(EditCarFormModel car)
+        {
+            if (!this.cars.GetCarsForDriver(this.drivers.GetIdByUser(this.User.GetId())).Any(c => c.Id == car.Id))
+            {
+                return BadRequest();
+            }
+
+            if (!cars.SaveCar(car.Id, car.Brand, car.Model, car.Year, car.ImgUrl))
+            {
+                return BadRequest();
+            }
+
+            return RedirectToAction("UserCars", "Cars");
         }
     }
 }

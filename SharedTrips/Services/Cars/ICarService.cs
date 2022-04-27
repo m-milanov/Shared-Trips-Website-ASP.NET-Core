@@ -14,5 +14,9 @@ namespace SharedTrips.Services.Cars
         public List<CarServiceModel> GetCarsForDriver(int driverId);
 
         public CarServiceModel GetCarForTrip(int tripId);
+
+        public CarServiceModel GetCar(int carId);
+
+        public bool SaveCar(int id, string brand, string model, int year, string imgUrl);
     }
 }

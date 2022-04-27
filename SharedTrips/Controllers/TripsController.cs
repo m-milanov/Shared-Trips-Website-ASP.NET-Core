@@ -51,7 +51,7 @@ namespace SharedTrips.Controllers
         {
             if (!drivers.UserIsDriver(this.User.GetId()))
             {
-                return RedirectToAction(nameof(DriversController.Become), "Driver");
+                return RedirectToAction(nameof(DriversController.Become), "Drivers");
             }
 
             ValidateTripFormModel(trip);
@@ -100,6 +100,7 @@ namespace SharedTrips.Controllers
             return View(query);
         }
 
+        [Authorize]
         public IActionResult Details(int id)
         {
             var tripDetails = this.trips.GetTripDetails(id);
