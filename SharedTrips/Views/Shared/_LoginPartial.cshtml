@@ -1,7 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using SharedTrips.Services.Drivers 
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@using SharedTrips.Data.Models
+
+@inject SignInManager<Passenger> SignInManager
+@inject UserManager<Passenger> UserManager
 @inject IDriversService drivers
 
 <ul class="navbar-nav">

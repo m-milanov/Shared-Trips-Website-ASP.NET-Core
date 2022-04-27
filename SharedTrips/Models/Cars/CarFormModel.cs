@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 using static SharedTrips.Data.DataConstants.Car;
 
+
 namespace SharedTrips.Models.Cars
 {
-    public class EditCarFormModel
+    public class CarFormModel
     {
-        [Required]
-        public int Id { get; set; }
-
         [Required]
         [MaxLength(BrandMaxLength)]
         public string Brand { get; set; }

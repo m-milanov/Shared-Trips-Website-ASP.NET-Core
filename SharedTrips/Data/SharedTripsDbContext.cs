@@ -8,7 +8,7 @@ using System.Text;
 
 namespace SharedTrips.Data
 {
-    public class SharedTripsDbContext : IdentityDbContext
+    public class SharedTripsDbContext : IdentityDbContext<Passenger>
     {
 
         public DbSet<Trip> Trips { get; set; } 
@@ -40,7 +40,7 @@ namespace SharedTrips.Data
                 .HasForeignKey(t => t.ToCityId);
 
             builder.Entity<Driver>()
-                .HasOne<IdentityUser>()
+                .HasOne<Passenger>()
                 .WithOne()
                 .HasForeignKey<Driver>(d => d.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
@@ -57,6 +57,15 @@ namespace SharedTrips.Data
                 .HasForeignKey(t => t.DriverId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<Trip>()
+                .HasMany(t => t.Passengers)
+                .WithMany(p => p.Trips)
+                .UsingEntity(j => j.ToTable("TripPassengers"));
+
+            builder.Entity<Trip>()
+                .HasMany(t => t.RequestedPassengers)
+                .WithMany(p => p.RequestedTrips)
+                .UsingEntity(j => j.ToTable("TripPassengersRequest"));
 
             base.OnModelCreating(builder);
         }

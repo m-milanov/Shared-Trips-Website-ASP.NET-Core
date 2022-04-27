@@ -16,5 +16,7 @@ namespace SharedTrips.Services.Cars
         public int Year { get; set; }
 
         public string ImgUrl { get; set; }
+
+        public string UserId { get; set; }
     }
 }

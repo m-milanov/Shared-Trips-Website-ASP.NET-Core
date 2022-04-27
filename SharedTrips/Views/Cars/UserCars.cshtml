@@ -1,5 +1,8 @@
-﻿@model IEnumerable<CarViewModel>
+﻿@model IEnumerable<CarServiceModel>
 
+@{
+    ViewBag.AllowCarEdit = true;
+}
 
 <div class="container">
     <div class="row">
@@ -21,51 +24,10 @@
                      </a>
                  </div>
              </div>
-             
         }
 
-        @foreach (var car in Model)
-        {
-            <div class="card  mb-3">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-4 col-lg-4 mb-3 mb-md-0">
-                            <div class="d-flex flex-row justify-content-center">
-                                <img src="@car.ImgUrl" alt="Car image" class="card-img">
-                            </div>
-                        </div>
-                        <div class="col-md-8 col-lg-8">
-                            <div class="row">
-                                <div class="col-12 col-xl-6">
-                                    <span class="text-muted">Brand: </span>
-                                    <span>@car.Brand</span>
-                                </div>
-                                <div class="col-12 col-xl-6">
-                                    <span class="text-muted">Model: </span>
-                                    <span>@car.Model</span>
-                                </div>
-                                <div class="col-12 col-xl-6">
-                                    <span class="text-muted">Year: </span>
-                                    <span>@car.Year</span>
-                                </div>
-                            </div>
-                            <div class="row align-items-end mt-3">
-                                <div class="col-4">
-                                    <a asp-controller="Cars" asp-action="Edit" asp-route-id="@car.Id" class="btn btn-success btn-block text-white">
-                                        <i class="fa-solid fa-pen"></i>  Edit
-                                    </a>
-                                </div>
-                                <div class="col-4">
-                                    <a asp-controller="Cars" asp-action="Delete" asp-route-id="@car.Id" class="btn btn-danger btn-block text-white">
-                                        <i class="fa-solid fa-trash-can"></i> Delete
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
+        <partial name="_CarListing" model="@Model" />
+
     </div>
 </div>
 

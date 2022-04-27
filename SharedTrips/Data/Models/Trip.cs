@@ -33,6 +33,11 @@ namespace SharedTrips.Data.Models
         public Driver Driver { get; set; }
 
         public int CarId { get; set; }
+
         public Car Car { get; set; }
+
+        public List<Passenger> RequestedPassengers { get; set; }
+
+        public List<Passenger> Passengers { get; set; }
     }
 }

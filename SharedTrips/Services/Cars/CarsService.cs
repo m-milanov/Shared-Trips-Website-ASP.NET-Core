@@ -49,10 +49,10 @@ namespace SharedTrips.Services.Cars
                     Model = c.Model,
                     Year = c.Year,
                     ImgUrl = c.ImgUrl,
-                    
+                    UserId = c.Driver.UserId
                 })
                 .First();
-        public bool SaveCar(int id, string brand, string model, int year, string imgUrl)
+        public bool UpdateCar(int id, string brand, string model, int year, string imgUrl)
         {
             var car = this.data.Cars.Where(c => c.Id == id).FirstOrDefault();
 

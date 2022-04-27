@@ -35,7 +35,7 @@ namespace SharedTrips.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult Add(AddCarFormModel car)
+        public IActionResult Add(CarFormModel car)
         {
             if (!drivers.UserIsDriver(this.User.GetId()))
             {
@@ -51,7 +51,7 @@ namespace SharedTrips.Controllers
 
             cars.Add(car.Brand, car.Model, car.Year, car.ImgUrl, driverId);
 
-            return RedirectToAction("Cars", "UserCars");
+            return RedirectToAction("UserCars", "Cars");
         }
 
         [Authorize]
@@ -62,16 +62,7 @@ namespace SharedTrips.Controllers
                 return RedirectToAction(nameof(DriversController.Become), "Drivers");
             }
 
-            var cars = this.cars
-                .GetCarsForDriver(this.drivers.GetIdByUser(this.User.GetId()))
-                .Select(c => new CarViewModel
-                {
-                    Id = c.Id,
-                    Brand = c.Brand,
-                    Model = c.Model,
-                    Year = c.Year,
-                    ImgUrl = c.ImgUrl
-                });
+            var cars = this.cars.GetCarsForDriver(this.drivers.GetIdByUser(this.User.GetId()));
 
             return View(cars);
         }
@@ -79,17 +70,23 @@ namespace SharedTrips.Controllers
         [Authorize]
         public IActionResult Edit(int id)
         {
-            if(!this.cars.GetCarsForDriver(this.drivers.GetIdByUser(this.User.GetId())).Any(c => c.Id == id))
+            var userId = this.User.GetId();
+
+            if (!drivers.UserIsDriver(userId))
             {
-                return BadRequest();
+                return RedirectToAction(nameof(DriversController.Become), "Drivers");
             }
 
             var car = cars.GetCar(id);
 
-            return View(
-            new EditCarFormModel
+            if (car.UserId != userId)
             {
-                Id = id,
+                return Unauthorized();
+            }
+
+            return View(
+            new CarFormModel
+            {
                 Brand = car.Brand,
                 Model = car.Model,
                 Year = car.Year,
@@ -99,14 +96,17 @@ namespace SharedTrips.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult Edit(EditCarFormModel car)
+        public IActionResult Edit(int id, CarFormModel car)
         {
-            if (!this.cars.GetCarsForDriver(this.drivers.GetIdByUser(this.User.GetId())).Any(c => c.Id == car.Id))
+            var userId = this.User.GetId();
+            var carData = cars.GetCar(id);
+
+            if (carData.UserId != userId)
             {
-                return BadRequest();
+                return Unauthorized();
             }
 
-            if (!cars.SaveCar(car.Id, car.Brand, car.Model, car.Year, car.ImgUrl))
+            if (!cars.UpdateCar(id, car.Brand, car.Model, car.Year, car.ImgUrl))
             {
                 return BadRequest();
             }

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SharedTrips.Data;
+using SharedTrips.Data.Models;
 using SharedTrips.Extensions;
 using SharedTrips.Services.Cars;
 using SharedTrips.Services.Drivers;
@@ -36,7 +37,7 @@ namespace SharedTrips
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<IdentityUser>(options =>
+            services.AddDefaultIdentity<Passenger>(options =>
             {
                 //options.SignIn.RequireConfirmedAccount = false;
                 options.Password.RequireDigit = false;
@@ -44,6 +45,7 @@ namespace SharedTrips
                 options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
             })
+            .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<SharedTripsDbContext>();
 
             services.AddControllersWithViews();

@@ -16,5 +16,9 @@ namespace SharedTrips.Data.Models
         public int DriverId { get; set; }
 
         public Driver Driver { get; set; }
+
+        public string PssengerId { get; set; }
+
+        public Passenger Passenger { get; set; }
     }
 }
