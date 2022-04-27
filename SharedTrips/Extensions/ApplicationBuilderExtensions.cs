@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SharedTrips.Data;
@@ -12,24 +13,32 @@ namespace SharedTrips.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
+        public const string AdministratorRoleName = "Administrator";
+        private const string adminEmail = "admin@gmail.com";
+        private const string adminName = "Admin";
+        private const string adminPassword = "123456";
+
         public static IApplicationBuilder PrepareDatabase(
             this IApplicationBuilder app)
         {
             using var scopedServices = app.ApplicationServices.CreateScope();
 
-            var data = scopedServices.ServiceProvider.GetService<SharedTripsDbContext>();
+            var services = scopedServices.ServiceProvider;
+
 
             //data.Database.Migrate();
 
-            data.Database.EnsureCreated();
-
-            SeedCities(data);
+            SeedCities(services);
+            SeedAdministrator(services);
 
             return app;
         }
 
-        private static void SeedCities(SharedTripsDbContext data)
+        private static void SeedCities(IServiceProvider services)
         {
+            var data = services.GetService<SharedTripsDbContext>();
+
+
             if (data.Cities.Any())
             {
                 return;
@@ -48,5 +57,39 @@ namespace SharedTrips.Extensions
 
             data.SaveChanges();
         }
+
+        private static void SeedAdministrator(IServiceProvider services)
+        {
+            var userManeger = services.GetRequiredService<UserManager<Passenger>>();
+            var roleManeger = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+            Task
+                .Run(async () =>
+                {
+                    if(await roleManeger.RoleExistsAsync(AdministratorRoleName))
+                    {
+                        return;
+                    }
+
+                    var role = new IdentityRole { Name = AdministratorRoleName };
+
+                    await roleManeger.CreateAsync(role);
+
+                    var user = new Passenger
+                    {
+                        Email = adminEmail,
+                        UserName = adminName,
+                        FullName = adminName,
+                        Age = 20,
+                    };
+
+                    await userManeger.CreateAsync(user, adminPassword);
+
+                    await userManeger.AddToRoleAsync(user, role.Name);
+                })
+                .GetAwaiter()
+                .GetResult();
+        }
+
     }
 }
