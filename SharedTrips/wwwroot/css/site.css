@@ -150,6 +150,21 @@ body {
         height: 130px
     }
 }
+.profile-picture.pp-large {
+    width: 100px;
+    height: 100px
+}
+
+.profile-picture.pp-small {
+    width: 85px;
+    height: 85px
+}
+
+.profile-picture.pp-medium {
+    width: 85px;
+    height: 85px
+}
+
 
 
 
@@ -247,20 +262,6 @@ body {
         text-decoration: none
     }
 
-.profile-picture.pp-large {
-    width: 130px;
-    height: 130px
-}
-
-.profile-picture.pp-small {
-    width: 65px;
-    height: 65px
-}
-
-.profile-picture.pp-medium {
-    width: 85px;
-    height: 85px
-}
 
 
 

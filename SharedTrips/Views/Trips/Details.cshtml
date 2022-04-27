@@ -2,14 +2,9 @@
 
     <div class="row my-4">
         <div class="col-md">
-            <div class="row">
-                <div class="col">
-                    <span class="text-muted">Details for</span>
-                </div>
-            </div>
             <div class="row mb-0 mb-md-3">
                 <div class="col">
-                    <h3>Trip</h3>
+                    <h3>Details for Trip</h3>
                 </div>
             </div>
         </div>
@@ -120,7 +115,7 @@
                                             <i class="fa-regular fa-star"></i>
                                         </h5>
                                         <span class="text-muted">
-                                            / @Model.Driver.Feedbacks.Count() 
+                                            / @Model.Driver.Feedbacks.Count()
                                             <span>rates</span>
                                         </span>
                                     </div>
@@ -175,6 +170,16 @@
                     </div>
                 </div>
             </div>
+            <p class="text-muted">Passengers</p>
+
+            <div class="card mb-3">
+                <div class="card-body col-12">
+                    <div class="row">
+                        <span>There are no approved passengers.</span>
+                    </div>
+                </div>
+            </div>
+            
         </div>
         <div class="col-lg-5">
             <div class="d-none d-lg-block">
@@ -231,17 +236,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-
-            <p class="text-muted">Passengers</p>
-
-            <div class="card mb-3">
-                <div class="card-body">
-
-                    <span>There are no approved passengers.</span>
-
                 </div>
             </div>
         </div>
