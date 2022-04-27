@@ -8,8 +8,12 @@ using System.Threading.Tasks;
 
 namespace SharedTrips.Models.Trips
 {
-    public class TripDetailsViewModel
+    public class DetailsTripViewModel
     {
+        public int Id { get; set; }
+
+        public bool UserIsDriver { get; set; }
+
         public TripDetailsServiceModel Trip { get; set; }
 
         public CarServiceModel Car { get; set; }

@@ -32,5 +32,7 @@ namespace SharedTrips.Data.Models
 
         [Required]
         public string UserId { get; set; }
+
+        public IEnumerable<Trip> Trips { get; set; }
     }
 }

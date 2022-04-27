@@ -51,6 +51,12 @@ namespace SharedTrips.Data
                 .HasForeignKey(t => t.CarId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<Trip>()
+                .HasOne(t => t.Driver)
+                .WithMany(d => d.Trips)
+                .HasForeignKey(t => t.DriverId)
+                .OnDelete(DeleteBehavior.Restrict);
+
 
             base.OnModelCreating(builder);
         }

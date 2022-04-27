@@ -103,12 +103,15 @@ namespace SharedTrips.Controllers
         [Authorize]
         public IActionResult Details(int id)
         {
+            var userIsDriver = this.drivers.GetIdByTrip(id) == this.drivers.GetIdByUser(this.User.GetId());
             var tripDetails = this.trips.GetTripDetails(id);
             var driverDetails = this.drivers.GetDriverForTrip(id);
             var carDetails = this.cars.GetCarForTrip(id);
 
-            var details = new TripDetailsViewModel
+            var details = new DetailsTripViewModel
             {
+                Id = id,
+                UserIsDriver = userIsDriver,
                 Trip = tripDetails,
                 Driver = driverDetails,
                 Car = carDetails

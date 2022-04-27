@@ -11,6 +11,8 @@ namespace SharedTrips.Services.Drivers
 
         public int GetIdByUser(string userId);
 
+        public int GetIdByTrip(int tripId);
+
         public DriverServiceModel GetDriverForTrip(int tripId);
 
         public int AddDriver(string name, string phoneNumber, string profilePictureUrl, string userId);

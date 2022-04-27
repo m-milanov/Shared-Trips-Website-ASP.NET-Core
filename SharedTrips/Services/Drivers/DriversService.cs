@@ -33,11 +33,18 @@ namespace SharedTrips.Services.Drivers
         }
 
         public int GetIdByUser(string userId)
-            => this.data
-                .Drivers
+            => this.data.Drivers
                 .Where(d => d.UserId == userId)
                 .Select(d => d.Id)
                 .FirstOrDefault();
+
+        public int GetIdByTrip(int tripId)
+            => this.data.Drivers
+                .Where(d => d.Trips.Any(t => t.Id == tripId))
+                .FirstOrDefault()
+                .Id;
+                
+            
 
         public DriverServiceModel GetDriverForTrip(int tripId)
             => this.data.Trips
@@ -61,5 +68,6 @@ namespace SharedTrips.Services.Drivers
         => this.data.Drivers
                 .Any(d => d.UserId == userId);
 
+        
     }
 }
