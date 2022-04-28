@@ -1,6 +1,4 @@
-﻿using SharedTrips.Data.Models;
-using SharedTrips.Services.Cars;
-using SharedTrips.Services.Trips;
+﻿using SharedTrips.Services.Cars;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,10 +7,9 @@ using System.Threading.Tasks;
 
 using static SharedTrips.Data.DataConstants.Trip;
 
-
-namespace SharedTrips.Models.Trips
+namespace SharedTrips.Services.Trips
 {
-    public class AddTripFormModel
+    public class TripServiceModel
     {
         [Range(MinTripPassengers, MaxTripPassengers)]
         public int MaxPassengers { get; init; }
@@ -30,7 +27,8 @@ namespace SharedTrips.Models.Trips
         public int CarId { get; set; }
 
         public IEnumerable<CarServiceModel> Cars { get; set; }
-        
+
         public IEnumerable<CityServiceModel> Cities { get; set; } = new List<CityServiceModel>();
+
     }
 }

@@ -10,15 +10,15 @@ using SharedTrips.Data;
 namespace SharedTrips.Migrations
 {
     [DbContext(typeof(SharedTripsDbContext))]
-    [Migration("20220427194820_PassengerModelAdded")]
-    partial class PassengerModelAdded
+    [Migration("20220428004152_TripUserConnection")]
+    partial class TripUserConnection
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.9")
+                .HasAnnotation("ProductVersion", "5.0.16")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -154,36 +154,6 @@ namespace SharedTrips.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("PassengerTrip", b =>
-                {
-                    b.Property<string>("PassengersId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("TripsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PassengersId", "TripsId");
-
-                    b.HasIndex("TripsId");
-
-                    b.ToTable("TripPassengers");
-                });
-
-            modelBuilder.Entity("PassengerTrip1", b =>
-                {
-                    b.Property<string>("RequestedPassengersId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("RequestedTripsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RequestedPassengersId", "RequestedTripsId");
-
-                    b.HasIndex("RequestedTripsId");
-
-                    b.ToTable("TripPassengersRequest");
                 });
 
             modelBuilder.Entity("SharedTrips.Data.Models.Car", b =>
@@ -416,6 +386,21 @@ namespace SharedTrips.Migrations
                     b.ToTable("Trips");
                 });
 
+            modelBuilder.Entity("SharedTrips.Data.Models.TripPassenger", b =>
+                {
+                    b.Property<int>("TripId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PassengerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("TripId", "PassengerId");
+
+                    b.HasIndex("PassengerId");
+
+                    b.ToTable("TripPassenger");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -463,36 +448,6 @@ namespace SharedTrips.Migrations
                     b.HasOne("SharedTrips.Data.Models.Passenger", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PassengerTrip", b =>
-                {
-                    b.HasOne("SharedTrips.Data.Models.Passenger", null)
-                        .WithMany()
-                        .HasForeignKey("PassengersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SharedTrips.Data.Models.Trip", null)
-                        .WithMany()
-                        .HasForeignKey("TripsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PassengerTrip1", b =>
-                {
-                    b.HasOne("SharedTrips.Data.Models.Passenger", null)
-                        .WithMany()
-                        .HasForeignKey("RequestedPassengersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SharedTrips.Data.Models.Trip", null)
-                        .WithMany()
-                        .HasForeignKey("RequestedTripsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -569,6 +524,25 @@ namespace SharedTrips.Migrations
                     b.Navigation("ToCity");
                 });
 
+            modelBuilder.Entity("SharedTrips.Data.Models.TripPassenger", b =>
+                {
+                    b.HasOne("SharedTrips.Data.Models.Passenger", "Passenger")
+                        .WithMany("TripPassengers")
+                        .HasForeignKey("PassengerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SharedTrips.Data.Models.Trip", "Trip")
+                        .WithMany("TripPassengers")
+                        .HasForeignKey("TripId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Passenger");
+
+                    b.Navigation("Trip");
+                });
+
             modelBuilder.Entity("SharedTrips.Data.Models.Car", b =>
                 {
                     b.Navigation("Trips");
@@ -593,6 +567,13 @@ namespace SharedTrips.Migrations
             modelBuilder.Entity("SharedTrips.Data.Models.Passenger", b =>
                 {
                     b.Navigation("Feedbacks");
+
+                    b.Navigation("TripPassengers");
+                });
+
+            modelBuilder.Entity("SharedTrips.Data.Models.Trip", b =>
+                {
+                    b.Navigation("TripPassengers");
                 });
 #pragma warning restore 612, 618
         }

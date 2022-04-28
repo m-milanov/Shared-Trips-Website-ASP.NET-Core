@@ -21,6 +21,8 @@ namespace SharedTrips.Data
 
         public DbSet<Feedback> Feedbacks { get; set; }
 
+        public DbSet<TripPassenger> TripPassenger { get; set; }
+
         public SharedTripsDbContext(DbContextOptions<SharedTripsDbContext> options)
             : base(options)
         {
@@ -56,7 +58,7 @@ namespace SharedTrips.Data
                 .WithMany(d => d.Trips)
                 .HasForeignKey(t => t.DriverId)
                 .OnDelete(DeleteBehavior.Restrict);
-
+            /*
             builder.Entity<Trip>()
                 .HasMany(t => t.Passengers)
                 .WithMany(p => p.Trips)
@@ -66,6 +68,22 @@ namespace SharedTrips.Data
                 .HasMany(t => t.RequestedPassengers)
                 .WithMany(p => p.RequestedTrips)
                 .UsingEntity(j => j.ToTable("TripPassengersRequest"));
+            */
+
+            builder.Entity<TripPassenger>()
+                .HasKey(tp => new { tp.TripId, tp.PassengerId });
+
+            builder.Entity<TripPassenger>()
+                .HasOne(tp => tp.Trip)
+                .WithMany(t => t.TripPassengers)
+                .HasForeignKey(tp => tp.TripId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<TripPassenger>()
+                .HasOne(tp => tp.Passenger)
+                .WithMany(p => p.TripPassengers)
+                .HasForeignKey(tp => tp.PassengerId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(builder);
         }

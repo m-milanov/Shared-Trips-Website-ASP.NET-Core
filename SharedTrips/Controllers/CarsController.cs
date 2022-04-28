@@ -84,14 +84,7 @@ namespace SharedTrips.Controllers
                 return Unauthorized();
             }
 
-            return View(
-            new CarFormModel
-            {
-                Brand = car.Brand,
-                Model = car.Model,
-                Year = car.Year,
-                ImgUrl = car.ImgUrl
-            });
+            return View(car);
         }
 
         [Authorize]

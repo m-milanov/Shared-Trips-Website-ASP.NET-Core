@@ -36,8 +36,7 @@ namespace SharedTrips.Data.Models
 
         public Car Car { get; set; }
 
-        public List<Passenger> RequestedPassengers { get; set; }
+        public List<TripPassenger> TripPassengers { get; set; }
 
-        public List<Passenger> Passengers { get; set; }
     }
 }

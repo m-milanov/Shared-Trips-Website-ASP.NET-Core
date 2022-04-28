@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SharedTrips.Migrations
 {
-    public partial class PassengerModelAdded : Migration
+    public partial class TripUserConnection : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -286,51 +286,27 @@ namespace SharedTrips.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TripPassengers",
+                name: "TripPassenger",
                 columns: table => new
                 {
-                    PassengersId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    TripsId = table.Column<int>(type: "int", nullable: false)
+                    TripId = table.Column<int>(type: "int", nullable: false),
+                    PassengerId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TripPassengers", x => new { x.PassengersId, x.TripsId });
+                    table.PrimaryKey("PK_TripPassenger", x => new { x.TripId, x.PassengerId });
                     table.ForeignKey(
-                        name: "FK_TripPassengers_AspNetUsers_PassengersId",
-                        column: x => x.PassengersId,
+                        name: "FK_TripPassenger_AspNetUsers_PassengerId",
+                        column: x => x.PassengerId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_TripPassengers_Trips_TripsId",
-                        column: x => x.TripsId,
+                        name: "FK_TripPassenger_Trips_TripId",
+                        column: x => x.TripId,
                         principalTable: "Trips",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TripPassengersRequest",
-                columns: table => new
-                {
-                    RequestedPassengersId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RequestedTripsId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TripPassengersRequest", x => new { x.RequestedPassengersId, x.RequestedTripsId });
-                    table.ForeignKey(
-                        name: "FK_TripPassengersRequest_AspNetUsers_RequestedPassengersId",
-                        column: x => x.RequestedPassengersId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TripPassengersRequest_Trips_RequestedTripsId",
-                        column: x => x.RequestedTripsId,
-                        principalTable: "Trips",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -394,14 +370,9 @@ namespace SharedTrips.Migrations
                 column: "PassengerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TripPassengers_TripsId",
-                table: "TripPassengers",
-                column: "TripsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TripPassengersRequest_RequestedTripsId",
-                table: "TripPassengersRequest",
-                column: "RequestedTripsId");
+                name: "IX_TripPassenger_PassengerId",
+                table: "TripPassenger",
+                column: "PassengerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Trips_CarId",
@@ -445,10 +416,7 @@ namespace SharedTrips.Migrations
                 name: "Feedbacks");
 
             migrationBuilder.DropTable(
-                name: "TripPassengers");
-
-            migrationBuilder.DropTable(
-                name: "TripPassengersRequest");
+                name: "TripPassenger");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

@@ -9,11 +9,25 @@ namespace SharedTrips.Services.Trips
     {
         public AllTripsServiceModel GetTrips(int fromCityId, int toCityId, DateTime timeOfDeparture);
 
-        public TripDetailsServiceModel GetTripDetails(int tripId);
+        public TripServiceModel GetTrip(int tripId);
+
+        public DetailsTripServiceModel GetTripDetails(int tripId);
 
         public int AddTrip(int maxPassengers, DateTime timeOfDeparture,
             int price, int fromcityId, int toCityId, int driverId, int carId);
 
-        public IEnumerable<CityServiceModel> GetCities(); 
+        public void UpdateTrip(int id, TripServiceModel trip);
+
+        public void UserRequest(int tripId, string userId);
+
+        public void AcceptRequest(int tripId, string userId);
+
+        public void RemoveUser(int tripId, string userId);
+
+        public bool UserIsDriver(int tripId, string userId);
+
+        public IEnumerable<CityServiceModel> GetCities();
+
+        public IEnumerable<PassengerServiceModel> GetPassengers(int tripId);
     }
 }

@@ -19,9 +19,7 @@ namespace SharedTrips.Data.Models
 
         public List<Feedback> Feedbacks { get; set; }
 
-        public List<Trip> RequestedTrips { get; set; }
-
-        public List<Trip> Trips { get; set; }
+        public List<TripPassenger> TripPassengers { get; set; }
 
     }
 }

@@ -14,10 +14,12 @@ namespace SharedTrips.Models.Trips
 
         public bool UserIsDriver { get; set; }
 
-        public TripDetailsServiceModel Trip { get; set; }
+        public DetailsTripServiceModel Trip { get; set; }
 
         public CarServiceModel Car { get; set; }
 
         public DriverServiceModel Driver { get; set; }
+
+        public IEnumerable<PassengerServiceModel> Passengers { get; set; }
     }
 }

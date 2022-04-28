@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SharedTrips.Data.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace SharedTrips.Services.Trips
 {
@@ -54,6 +55,20 @@ namespace SharedTrips.Services.Trips
             return query;
         }
 
+        public TripServiceModel GetTrip(int tripId)
+            => this.data.Trips
+            .Where(t => t.Id == tripId)
+            .Select(t => new TripServiceModel
+            {
+                Price = t.Price,
+                TimeOfDeparture = t.TimeOfDeparture,
+                MaxPassengers = t.MaxPassengers,
+                FromCityId = t.FromCityId,
+                ToCityId = t.ToCityId,
+                CarId = t.CarId
+            })
+            .FirstOrDefault();
+
         public int AddTrip(
             int maxPassengers,
             DateTime timeOfDeparture,
@@ -74,15 +89,94 @@ namespace SharedTrips.Services.Trips
                 Car = this.data.Cars.Where(c => c.Id == carId).FirstOrDefault()
             };
 
-            data.Trips.Add(trip);
-            data.SaveChanges();
+            this.data.Trips.Add(trip);
+            this.data.SaveChanges();
 
             return trip.Id;
         }
-        public TripDetailsServiceModel GetTripDetails(int tripId)
+
+        public void UpdateTrip(int id, TripServiceModel trip)
+        {
+            var tripData = this.data.Trips
+                .Where(t => t.Id == id)
+                .FirstOrDefault();
+
+            tripData.Price = trip.Price;
+            tripData.TimeOfDeparture = trip.TimeOfDeparture;
+            tripData.MaxPassengers = trip.MaxPassengers;
+            tripData.FromCityId = trip.FromCityId;
+            tripData.ToCityId = trip.ToCityId;
+            tripData.CarId = trip.CarId;
+
+            this.data.SaveChanges();
+        }
+
+        public void UserRequest(int tripId, string userId)
+        {
+            var trip = this.data.Trips
+                .Where(t => t.Id == tripId)
+                .FirstOrDefault();
+
+            var user = this.data.Users
+                .Where(u => u.Id == userId)
+                .FirstOrDefault();
+
+            data.TripPassenger.Add(new TripPassenger
+            {
+                Accepted = false,
+                TripId = tripId,
+                Trip = trip,
+                PassengerId = userId,
+                Passenger = user,
+            });
+
+            this.data.SaveChanges();
+        }
+
+        public void AcceptRequest(int tripId, string userId)
+        {
+            var passengerRequest = this.data.TripPassenger
+                .Where(tp => tp.TripId == tripId && tp.PassengerId == userId)
+                .FirstOrDefault();
+
+            passengerRequest.Accepted = true;
+
+            data.SaveChanges();
+        }
+
+        public void RemoveUser(int tripId, string userId)
+        {
+            var passengerRequest = this.data.TripPassenger
+                .Where(tp => tp.TripId == tripId && tp.PassengerId == userId)
+                .FirstOrDefault();
+
+            this.data.TripPassenger.Remove(passengerRequest);
+
+            data.SaveChanges();
+        }
+
+        public bool UserIsDriver(int tripId, string userId)
+            => this.data.Trips
+                .Where(t => t.Id == tripId)
+                .Select(t => t.Driver.UserId)
+                .FirstOrDefault() == userId;
+
+        public IEnumerable<PassengerServiceModel> GetPassengers(int tripId)
+            => this.data.TripPassenger
+                .Where(tp => tp.TripId == tripId)
+                .Select(tp => new PassengerServiceModel
+                {
+                    Id = tp.PassengerId,
+                    FullName = tp.Passenger.FullName,
+                    Age = tp.Passenger.Age,
+                    Accepted = tp.Accepted
+                })
+                .ToList();
+
+        public DetailsTripServiceModel GetTripDetails(int tripId)
             => this.data.Trips
             .Where(t => t.Id == tripId)
-            .Select(t => new TripDetailsServiceModel
+            .Select(t => new DetailsTripServiceModel
             {
                 Price = t.Price,
                 MaxPassengers = t.MaxPassengers,
@@ -90,7 +184,7 @@ namespace SharedTrips.Services.Trips
                 FromCityName = t.FromCity.Name,
                 ToCityName = t.ToCity.Name
             })
-            .First();
+            .FirstOrDefault();
 
         public IEnumerable<CityServiceModel> GetCities()
             => this.data.Cities
@@ -102,6 +196,6 @@ namespace SharedTrips.Services.Trips
             })
             .ToList();
 
-       
+        
     }
 }

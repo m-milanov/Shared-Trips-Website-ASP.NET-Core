@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SharedTrips.Data.Models;
 using SharedTrips.Extensions;
@@ -37,7 +38,7 @@ namespace SharedTrips.Controllers
                 return RedirectToAction(nameof(DriversController.Become), "Drivers");
             }
 
-            return View(new AddTripFormModel
+            return View(new TripServiceModel
             {
                 Cities = this.trips.GetCities(),
                 Cars = cars.GetCarsForDriver(this.drivers.GetIdByUser(this.User.GetId()))
@@ -47,7 +48,7 @@ namespace SharedTrips.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult Add(AddTripFormModel trip)
+        public IActionResult Add(TripServiceModel trip)
         {
             if (!drivers.UserIsDriver(this.User.GetId()))
             {
@@ -71,6 +72,8 @@ namespace SharedTrips.Controllers
                 trip.ToCityId,
                 drivers.GetIdByUser(this.User.GetId()),
                 trip.CarId);
+
+            ViewBag.Editing = true;
 
             return RedirectToAction(nameof(All));
         }
@@ -107,6 +110,7 @@ namespace SharedTrips.Controllers
             var tripDetails = this.trips.GetTripDetails(id);
             var driverDetails = this.drivers.GetDriverForTrip(id);
             var carDetails = this.cars.GetCarForTrip(id);
+            var passengers = this.trips.GetPassengers(id);
 
             var details = new DetailsTripViewModel
             {
@@ -114,13 +118,96 @@ namespace SharedTrips.Controllers
                 UserIsDriver = userIsDriver,
                 Trip = tripDetails,
                 Driver = driverDetails,
-                Car = carDetails
+                Car = carDetails,
+                Passengers = passengers,
             };
 
             return View(details);
-       }
+        }
 
-        private void ValidateTripFormModel(AddTripFormModel trip)
+        [Authorize]
+        public IActionResult Edit(int id)
+        {
+            if(!this.trips.UserIsDriver(id, this.User.GetId()))
+            {
+                return Unauthorized();
+            }
+            
+            var trip = this.trips.GetTrip(id);
+
+            trip.Cities = this.trips.GetCities();
+            trip.Cars = this.cars.GetCarsForDriver(this.drivers.GetIdByUser(this.User.GetId()));
+
+            ViewBag.Editing = true;
+
+            return View(trip);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult Edit(int id, TripServiceModel trip)
+        {
+            if (!this.trips.UserIsDriver(id, this.User.GetId()))
+            {
+                return Unauthorized();
+            }
+
+            ValidateTripFormModel(trip);
+
+            if (!ModelState.IsValid)
+            {
+                trip.Cities = this.trips.GetCities();
+                trip.Cars = cars.GetCarsForDriver(this.drivers.GetIdByUser(this.User.GetId()));
+                return View(trip);
+            }
+
+            this.trips.UpdateTrip(id, trip);
+
+            return RedirectToAction("All", "Trips");
+        }
+
+        [Authorize]
+        public IActionResult UserRequest(int id)
+        {
+            if (this.trips.UserIsDriver(id, this.User.GetId()))
+            {
+                return Unauthorized();
+            }
+
+            var userId = this.User.GetId();
+            
+            this.trips.UserRequest(id, userId);
+
+            return RedirectToAction("All", "Trips");
+        }
+
+        [Authorize]
+        public IActionResult AcceptUser(int id, string userId)
+        {
+            if (!this.trips.UserIsDriver(id, this.User.GetId()))
+            {
+                return Unauthorized();
+            }
+
+            this.trips.AcceptRequest(id, userId);
+
+            return RedirectToAction("All", "Trips");
+        }
+
+        [Authorize]
+        public IActionResult RemoveUser(int id, string userId)
+        {
+            if (!this.trips.UserIsDriver(id, this.User.GetId()))
+            {
+                return Unauthorized();
+            }
+
+            this.trips.RemoveUser(id, userId);
+
+            return RedirectToAction("All", "Trips");
+        }
+
+        private void ValidateTripFormModel(TripServiceModel trip)
         {
             if (trip.FromCityId == trip.ToCityId)
             {
