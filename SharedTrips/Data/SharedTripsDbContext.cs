@@ -23,6 +23,8 @@ namespace SharedTrips.Data
 
         public DbSet<TripPassenger> TripPassenger { get; set; }
 
+        public DbSet<PassengerDriver> PassengerDrivers { get; set; }
+
         public SharedTripsDbContext(DbContextOptions<SharedTripsDbContext> options)
             : base(options)
         {
@@ -58,17 +60,7 @@ namespace SharedTrips.Data
                 .WithMany(d => d.Trips)
                 .HasForeignKey(t => t.DriverId)
                 .OnDelete(DeleteBehavior.Restrict);
-            /*
-            builder.Entity<Trip>()
-                .HasMany(t => t.Passengers)
-                .WithMany(p => p.Trips)
-                .UsingEntity(j => j.ToTable("TripPassengers"));
-
-            builder.Entity<Trip>()
-                .HasMany(t => t.RequestedPassengers)
-                .WithMany(p => p.RequestedTrips)
-                .UsingEntity(j => j.ToTable("TripPassengersRequest"));
-            */
+            
 
             builder.Entity<TripPassenger>()
                 .HasKey(tp => new { tp.TripId, tp.PassengerId });
@@ -83,6 +75,21 @@ namespace SharedTrips.Data
                 .HasOne(tp => tp.Passenger)
                 .WithMany(p => p.TripPassengers)
                 .HasForeignKey(tp => tp.PassengerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<PassengerDriver>()
+                .HasKey(pd => new { pd.PassengerId, pd.DriverId });
+
+            builder.Entity<PassengerDriver>()
+                .HasOne(pd => pd.Passenger)
+                .WithMany(p => p.PassengerDrivers)
+                .HasForeignKey(pd => pd.PassengerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<PassengerDriver>()
+                .HasOne(pd => pd.Driver)
+                .WithMany(d => d.PassengerDrivers)
+                .HasForeignKey(pd => pd.DriverId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(builder);

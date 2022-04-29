@@ -13,6 +13,7 @@ using SharedTrips.Extensions;
 using SharedTrips.Services.Cars;
 using SharedTrips.Services.Drivers;
 using SharedTrips.Services.Trips;
+using SharedTrips.Services.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +54,7 @@ namespace SharedTrips
             services.AddTransient<ITripsService, TripsService>();
             services.AddTransient<IDriversService, DriversService>();
             services.AddTransient<ICarsService, CarsService>();
+            services.AddTransient<IUsersService, UsersService>();
 
         }
 

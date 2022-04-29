@@ -24,6 +24,8 @@ namespace SharedTrips.Services.Trips
 
         public void DeleteTrip(int id);
 
+        public void EndTrip(int id);
+
         public void UserRequest(int tripId, string userId);
 
         public void AcceptRequest(int tripId, string userId);

@@ -225,8 +225,7 @@ namespace SharedTrips.Controllers
                 return BadRequest();
             }
 
-
-            this.trips.DeleteTrip(id);
+            this.trips.EndTrip(id);
 
             return RedirectToAction("All", "Trips");
         }

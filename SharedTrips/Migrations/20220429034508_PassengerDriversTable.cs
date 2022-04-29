@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SharedTrips.Migrations
 {
-    public partial class TripUserConnection : Migration
+    public partial class PassengerDriversTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -243,6 +243,30 @@ namespace SharedTrips.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PassengerDrivers",
+                columns: table => new
+                {
+                    PassengerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    DriverId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PassengerDrivers", x => new { x.PassengerId, x.DriverId });
+                    table.ForeignKey(
+                        name: "FK_PassengerDrivers_AspNetUsers_PassengerId",
+                        column: x => x.PassengerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PassengerDrivers_Drivers_DriverId",
+                        column: x => x.DriverId,
+                        principalTable: "Drivers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Trips",
                 columns: table => new
                 {
@@ -290,7 +314,8 @@ namespace SharedTrips.Migrations
                 columns: table => new
                 {
                     TripId = table.Column<int>(type: "int", nullable: false),
-                    PassengerId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    PassengerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Accepted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -370,6 +395,11 @@ namespace SharedTrips.Migrations
                 column: "PassengerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PassengerDrivers_DriverId",
+                table: "PassengerDrivers",
+                column: "DriverId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TripPassenger_PassengerId",
                 table: "TripPassenger",
                 column: "PassengerId");
@@ -414,6 +444,9 @@ namespace SharedTrips.Migrations
 
             migrationBuilder.DropTable(
                 name: "Feedbacks");
+
+            migrationBuilder.DropTable(
+                name: "PassengerDrivers");
 
             migrationBuilder.DropTable(
                 name: "TripPassenger");

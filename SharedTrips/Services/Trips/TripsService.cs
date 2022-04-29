@@ -168,6 +168,35 @@ namespace SharedTrips.Services.Trips
             this.data.SaveChanges();
         }
 
+        public void EndTrip(int id)
+        {
+            var driver = this.data.Drivers
+                .Where(d => d.Trips.Any(t => t.Id == id))
+                .FirstOrDefault();
+
+            driver.TimesDriver = driver.TimesDriver + 1;
+
+            var passengers = this.data.TripPassenger
+                .Where(tp => tp.TripId == id)
+                .Select(tp => tp.Passenger)
+                .ToList();
+
+            foreach(var p in passengers)
+            {
+                this.data.Add(new PassengerDriver
+                {
+                    PassengerId = p.Id,
+                    Passenger = p,
+                    DriverId = driver.Id,
+                    Driver = driver
+                });
+            }
+
+            DeleteTrip(id);
+
+            this.data.SaveChanges();
+        }
+
         public void UserRequest(int tripId, string userId)
         {
             var trip = this.data.Trips

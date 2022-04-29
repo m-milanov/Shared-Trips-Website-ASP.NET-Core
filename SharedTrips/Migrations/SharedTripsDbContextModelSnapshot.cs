@@ -215,9 +215,6 @@ namespace SharedTrips.Migrations
                         .HasMaxLength(40)
                         .HasColumnType("nvarchar(40)");
 
-                    b.Property<string>("PassengerId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -235,8 +232,6 @@ namespace SharedTrips.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PassengerId");
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -346,6 +341,21 @@ namespace SharedTrips.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("SharedTrips.Data.Models.PassengerDriver", b =>
+                {
+                    b.Property<string>("PassengerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("DriverId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PassengerId", "DriverId");
+
+                    b.HasIndex("DriverId");
+
+                    b.ToTable("PassengerDrivers");
                 });
 
             modelBuilder.Entity("SharedTrips.Data.Models.Trip", b =>
@@ -472,10 +482,6 @@ namespace SharedTrips.Migrations
             modelBuilder.Entity("SharedTrips.Data.Models.Driver", b =>
                 {
                     b.HasOne("SharedTrips.Data.Models.Passenger", null)
-                        .WithMany("DriversToRate")
-                        .HasForeignKey("PassengerId");
-
-                    b.HasOne("SharedTrips.Data.Models.Passenger", null)
                         .WithOne()
                         .HasForeignKey("SharedTrips.Data.Models.Driver", "UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -493,6 +499,25 @@ namespace SharedTrips.Migrations
                     b.HasOne("SharedTrips.Data.Models.Passenger", "Passenger")
                         .WithMany("Feedbacks")
                         .HasForeignKey("PassengerId");
+
+                    b.Navigation("Driver");
+
+                    b.Navigation("Passenger");
+                });
+
+            modelBuilder.Entity("SharedTrips.Data.Models.PassengerDriver", b =>
+                {
+                    b.HasOne("SharedTrips.Data.Models.Driver", "Driver")
+                        .WithMany("PassengerDrivers")
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SharedTrips.Data.Models.Passenger", "Passenger")
+                        .WithMany("PassengerDrivers")
+                        .HasForeignKey("PassengerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Driver");
 
@@ -571,14 +596,16 @@ namespace SharedTrips.Migrations
 
                     b.Navigation("Feedbacks");
 
+                    b.Navigation("PassengerDrivers");
+
                     b.Navigation("Trips");
                 });
 
             modelBuilder.Entity("SharedTrips.Data.Models.Passenger", b =>
                 {
-                    b.Navigation("DriversToRate");
-
                     b.Navigation("Feedbacks");
+
+                    b.Navigation("PassengerDrivers");
 
                     b.Navigation("TripPassengers");
                 });

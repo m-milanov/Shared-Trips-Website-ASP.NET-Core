@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SharedTrips.Extensions;
 using SharedTrips.Services.Trips;
+using SharedTrips.Services.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +14,12 @@ namespace SharedTrips.Controllers
     {
         private readonly ITripsService trips;
 
-        public UsersController(ITripsService trips)
+        private readonly IUsersService users;
+
+        public UsersController(ITripsService trips, IUsersService users)
         {
             this.trips = trips;
+            this.users = users;
         }
 
         [Authorize]
@@ -57,6 +61,24 @@ namespace SharedTrips.Controllers
             this.trips.RemoveUser(id, userId);
 
             return RedirectToAction("Details", "Trips", new { id });
+        }
+
+
+        [Authorize]
+        public IActionResult RateDriver()
+        {
+            var drivers = users.GetDriversToRate(this.User.GetId());
+
+            return View(drivers);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult RateDriver(int id)
+        {
+            var drivers = users.GetDriversToRate(this.User.GetId());
+
+            return View(drivers);
         }
     }
 }

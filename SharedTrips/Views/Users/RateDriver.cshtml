@@ -1,0 +1,69 @@
+﻿@model IEnumerable<RateDriverServiceModel> 
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-center my-4">Rate Drivers</h2>
+        </div>
+    </div>
+    <div class="row">
+
+        @if (Model.Count() == 0)
+        {
+            <div class="col-12">
+                <h4 class="text-center my-4">There are no drivers to rate!</h4>
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+                <div class="col-3">
+                    <a asp-controller="Trips" asp-action="All" class="btn btn-success btn-block text-white">
+                        Find a trip
+                    </a>
+                </div>
+            </div>
+        }
+
+        @foreach (var driver in Model)
+{
+    <div class="card  mb-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 col-lg-4 mb-3 mb-md-0">
+                    <div class="d-flex flex-row justify-content-center">
+                        <img src="@driver.ProfilePictureUrl" alt="Car image" class="card-img">
+                    </div>
+                </div>
+                <div class="col-md-8 col-lg-8">
+                    <div class="row">
+                        <div class="col-12 col-xl-6">
+                            <span class="text-muted">Name: </span>
+                            <span>@driver.Name</span>
+                        </div>
+                    </div>
+
+                    <form method="post">
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label asp-for="@driver.Rating">Rating from 1 to 5:</label>
+                                <input asp-for="@driver.Rating" class="form-control" placeholder="...">
+                                <span asp-validation-for="@driver.Rating" class="small text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-8">
+                                <label asp-for="@driver.Comment">Comment:</label>
+                                <textarea  asp-for="@driver.Comment" type="text" class="form-control" placeholder="..."></textarea>
+                                <span asp-validation-for="@driver.Comment" class="small text-danger"></span>
+                            </div>
+                        </div>
+
+                        <button asp-controller="Users" asp-action="RateDriver" asp-route-id="@driver.Id"
+                                type="submit" class="btn btn-success">Rate</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+    </div>
+</div>

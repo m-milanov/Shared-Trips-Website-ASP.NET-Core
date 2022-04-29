@@ -34,5 +34,7 @@ namespace SharedTrips.Data.Models
         public string UserId { get; set; }
 
         public IEnumerable<Trip> Trips { get; set; }
+
+        public List<PassengerDriver> PassengerDrivers { get; set; } = new List<PassengerDriver>();
     }
 }
