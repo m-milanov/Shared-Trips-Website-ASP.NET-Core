@@ -18,6 +18,8 @@ namespace SharedTrips.Services.Trips
 
         public void UpdateTrip(int id, TripServiceModel trip);
 
+        public void DeleteTrip(int id);
+
         public void UserRequest(int tripId, string userId);
 
         public void AcceptRequest(int tripId, string userId);

@@ -41,6 +41,7 @@ namespace SharedTrips.Services.Trips
                     Price = t.Price,
                     TimeOfDeparture = t.TimeOfDeparture,
                     MaxPassengers = t.MaxPassengers,
+                    FreeSeats = t.MaxPassengers - t.TripPassengers.Where(tp => tp.Accepted).Count(),
                     FromCity = t.FromCity.Name,
                     ToCity = t.ToCity.Name,
                     DriverName = t.Driver.Name,
@@ -107,6 +108,24 @@ namespace SharedTrips.Services.Trips
             tripData.FromCityId = trip.FromCityId;
             tripData.ToCityId = trip.ToCityId;
             tripData.CarId = trip.CarId;
+
+            this.data.SaveChanges();
+        }
+
+        public void DeleteTrip(int id)
+        {
+            var trip = this.data.Trips
+                .Where(t => t.Id == id)
+                .FirstOrDefault();
+
+            this.data.TripPassenger
+                .Where(tp => tp.TripId == id)
+                .ToList()
+                .ForEach(tp => 
+                    this.data.TripPassenger
+                    .Remove(tp));
+
+            this.data.Trips.Remove(trip);
 
             this.data.SaveChanges();
         }
@@ -180,6 +199,7 @@ namespace SharedTrips.Services.Trips
             {
                 Price = t.Price,
                 MaxPassengers = t.MaxPassengers,
+                FreeSeats = t.MaxPassengers - t.TripPassengers.Where(tp => tp.Accepted).Count(),
                 TimeOfDeparture = t.TimeOfDeparture,
                 FromCityName = t.FromCity.Name,
                 ToCityName = t.ToCity.Name

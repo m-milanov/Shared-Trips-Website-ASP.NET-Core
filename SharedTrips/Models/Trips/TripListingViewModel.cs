@@ -16,6 +16,8 @@ namespace SharedTrips.Models.Trips
 
         public int MaxPassengers { get; set; }
 
+        public int FreeSeats { get; set; }
+
         public string FromCity { get; init; }
 
         public string ToCity { get; init; }

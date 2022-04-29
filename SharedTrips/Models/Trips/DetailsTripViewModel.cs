@@ -14,6 +14,8 @@ namespace SharedTrips.Models.Trips
 
         public bool UserIsDriver { get; set; }
 
+        public bool UserIsInTrip { get; set; }
+
         public DetailsTripServiceModel Trip { get; set; }
 
         public CarServiceModel Car { get; set; }

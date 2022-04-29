@@ -17,6 +17,7 @@ namespace SharedTrips.Extensions
         private const string adminEmail = "admin@gmail.com";
         private const string adminName = "Admin";
         private const string adminPassword = "123456";
+        private const string usersPassword = "123456";
 
         public static IApplicationBuilder PrepareDatabase(
             this IApplicationBuilder app)
@@ -25,10 +26,10 @@ namespace SharedTrips.Extensions
 
             var services = scopedServices.ServiceProvider;
 
-
             //data.Database.Migrate();
 
             SeedCities(services);
+            SeedUsers(services);
             SeedAdministrator(services);
 
             return app;
@@ -56,6 +57,57 @@ namespace SharedTrips.Extensions
             });
 
             data.SaveChanges();
+        }
+
+        private static void SeedUsers(IServiceProvider services)
+        {
+            var userManeger = services.GetRequiredService<UserManager<Passenger>>();
+            var data = services.GetService<SharedTripsDbContext>();
+
+            if (data.Users.Any())
+            {
+                return;
+            }
+
+            Task
+                .Run(async () =>
+                {
+                    var users = new List<Passenger>
+                    {
+                        new Passenger{
+                            Email = "user1@gmail.com",
+                            UserName = "user1@gmail.com",
+                            FullName = "Martin Milanov",
+                            Age = 19,
+                        },
+                        new Passenger{
+                            Email = "user2@gmail.com",
+                            UserName = "user2@gmail.com",
+                            FullName = "Zhuliet Yaneva",
+                            Age = 19,
+                        },
+                        new Passenger{
+                            Email = "user3@gmail.com",
+                            UserName = "user3@gmail.com",
+                            FullName = "Ivaylo Milanov",
+                            Age = 25,
+                        },
+                        new Passenger{
+                            Email = "user4@gmail.com",
+                            UserName = "user4@gmail.com",
+                            FullName = "Ivan Dekov",
+                            Age = 19,
+                        },
+                    };
+
+                    foreach(var user in users)
+                    {
+                        await userManeger.CreateAsync(user, usersPassword);
+                    }
+                    
+                })
+                .GetAwaiter()
+                .GetResult();
         }
 
         private static void SeedAdministrator(IServiceProvider services)

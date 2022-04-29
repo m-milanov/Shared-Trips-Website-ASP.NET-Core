@@ -94,6 +94,7 @@ namespace SharedTrips.Controllers
                 ToCity = t.ToCity,
                 TimeOfDeparture = t.TimeOfDeparture,
                 MaxPassengers = t.MaxPassengers,
+                FreeSeats = t.FreeSeats,
                 DriverName = t.DriverName,
                 DriverPictureUrl = t.DriverPictureUrl,
                 DriverRating = t.DriverRating,
@@ -106,16 +107,25 @@ namespace SharedTrips.Controllers
         [Authorize]
         public IActionResult Details(int id)
         {
+            var trip = this.trips.GetTrip(id);
+
+            if (trip == null)
+            {
+                return BadRequest();
+            }
+
             var userIsDriver = this.drivers.GetIdByTrip(id) == this.drivers.GetIdByUser(this.User.GetId());
             var tripDetails = this.trips.GetTripDetails(id);
             var driverDetails = this.drivers.GetDriverForTrip(id);
             var carDetails = this.cars.GetCarForTrip(id);
             var passengers = this.trips.GetPassengers(id);
+            var userIsInTrip = passengers.Any(p => p.Id == this.User.GetId());
 
             var details = new DetailsTripViewModel
             {
                 Id = id,
                 UserIsDriver = userIsDriver,
+                UserIsInTrip = userIsInTrip,
                 Trip = tripDetails,
                 Driver = driverDetails,
                 Car = carDetails,
@@ -134,6 +144,11 @@ namespace SharedTrips.Controllers
             }
             
             var trip = this.trips.GetTrip(id);
+
+            if (trip == null)
+            {
+                return BadRequest();
+            }
 
             trip.Cities = this.trips.GetCities();
             trip.Cars = this.cars.GetCarsForDriver(this.drivers.GetIdByUser(this.User.GetId()));
@@ -167,42 +182,21 @@ namespace SharedTrips.Controllers
         }
 
         [Authorize]
-        public IActionResult UserRequest(int id)
-        {
-            if (this.trips.UserIsDriver(id, this.User.GetId()))
-            {
-                return Unauthorized();
-            }
-
-            var userId = this.User.GetId();
-            
-            this.trips.UserRequest(id, userId);
-
-            return RedirectToAction("All", "Trips");
-        }
-
-        [Authorize]
-        public IActionResult AcceptUser(int id, string userId)
+        public IActionResult Delete(int id)
         {
             if (!this.trips.UserIsDriver(id, this.User.GetId()))
             {
                 return Unauthorized();
             }
 
-            this.trips.AcceptRequest(id, userId);
+            var trip = this.trips.GetTrip(id);
 
-            return RedirectToAction("All", "Trips");
-        }
-
-        [Authorize]
-        public IActionResult RemoveUser(int id, string userId)
-        {
-            if (!this.trips.UserIsDriver(id, this.User.GetId()))
+            if(trip == null)
             {
-                return Unauthorized();
+                return BadRequest();
             }
 
-            this.trips.RemoveUser(id, userId);
+            this.trips.DeleteTrip(id);
 
             return RedirectToAction("All", "Trips");
         }
