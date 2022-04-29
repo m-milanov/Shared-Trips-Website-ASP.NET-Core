@@ -29,19 +29,22 @@
                 </div>
             }
             else
-            {
-                if (Model.UserIsInTrip || Model.Trip.FreeSeats == 0)
-                {
+            { 
+                <div class="col-md-5 offset-md-7">
+                    @if (Model.UserIsInTrip || Model.Trip.FreeSeats == 0)
+                    {
                     <a asp-controller="Users" asp-action="UserRequest" asp-route-id="@Model.Id" class="btn btn-success btn-block text-white disabled">
                         <i class="fa-solid fa-user-plus align-bottom md-24"></i> Send request
                     </a>
-                }
-                else
-                {
+                    }
+                    else
+                    {
                     <a asp-controller="Users" asp-action="UserRequest" asp-route-id="@Model.Id" class="btn btn-success btn-block text-white">
                         <i class="fa-solid fa-user-plus align-bottom md-24"></i> Send request
                     </a>
-                }
+                    }
+                </div>
+                
             }
         </div>
     </div>
@@ -303,6 +306,14 @@
                     </div>
                 </div>
             </div>
+            @if (Model.UserIsDriver)
+            {
+                <div class="col-md-6 offset-md-3">
+                    <a asp-controller="Trips" asp-action="End" asp-route-id="@Model.Id" class="btn btn-warning btn-block">
+                         End trip
+                    </a>
+                </div>
+            }
         </div>
     </div>
 </div>

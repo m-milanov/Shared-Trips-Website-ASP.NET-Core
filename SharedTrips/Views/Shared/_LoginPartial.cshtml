@@ -11,7 +11,6 @@
     {
         var userIsDriver = drivers.UserIsDriver(User.GetId());
 
-
         if (userIsDriver)
         {
             <li class="nav-item">
@@ -26,9 +25,13 @@
             <li class="nav-item">
                 <a class="nav-link text-white" asp-controller="Trips" asp-action="UserTrips">My Trips</a>
             </li>
+
         }
         else
         {
+            <li class="nav-item">
+                <a class="nav-link text-white" asp-controller="Trips" asp-action="UserTrips">My Trips</a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Drivers" asp-action="Become">Become a driver</a>
             </li>

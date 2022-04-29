@@ -1,0 +1,79 @@
+﻿@model List<TripListingViewModel>
+
+
+@foreach (var trip in Model)
+{
+    <div class="col-6 mb-2">
+        <a asp-controller="Trips" asp-action="Details" asp-route-id="@trip.Id" class="list-group-item list-group-item-action flex-column p-0">
+            <div class="card bg-light d-flex w-100 tripCard">
+                <div class="card-body d-flex justify-content-between ">
+                    <div class="row">
+                        <div class="col-md-5 col-xl-3 col-lg-4 mb-3 mb-md-0">
+                            <div class="d-flex flex-row justify-content-center">
+                                <img src="@trip.DriverPictureUrl"
+                                     alt="Profile Picture" class="rounded-circle profile-picture pp-small">
+                            </div>
+                            <div class="d-flex flex-row justify-content-center">
+                                <span class="text-md-center">@trip.DriverName</span>
+                            </div>
+                            <div class="d-flex flex-row justify-content-center">
+                                <div class="d-inline">
+                                    @for (int i = 0; i < trip.DriverRating; i++)
+                                    {
+                                        <i class="fa fa-star text-primary"></i>
+                                    }
+
+                                    @for (int i = 0; i < (5 - trip.DriverRating); i++)
+                                    {
+                                        <i class="fa-regular fa-star"></i>
+                                    }
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-7 col-xl-9 col-lg-8">
+                            <div class="row">
+                                <div class="col-12 col-xl-6 trip-info my-2">
+                                    <i class="fa-solid fa-location-dot text-success md-18"></i>
+                                    <span class="text-muted">From:</span>
+                                    <span>@trip.FromCity</span>
+                                </div>
+                                <div class="col-12 col-xl-6 my-2">
+                                    <i class="fa-solid fa-location-dot material-icons text-success md-18"></i>
+                                    <span class="text-muted">To: </span>
+                                    <span>@trip.ToCity</span>
+                                </div>
+                                <div class="col-12 col-xl-6 my-2">
+                                    <i class="fa-solid fa-calendar-days text-success md-18"></i>
+                                    <span class="text-muted">Date:</span>
+                                    <span>@trip.TimeOfDeparture.ToShortDateString()</span>
+                                </div>
+                                <div class="col-12 col-xl-6 my-2">
+                                    <i class="fa-solid fa-clock text-success md-18"></i>
+                                    <span class="text-muted">Hour:</span>
+                                    <span class="align-top">@trip.TimeOfDeparture.ToShortTimeString()</span>
+                                </div>
+                                <div class="col-12 col-xl-6 my-2">
+                                    <i class="fa-solid fa-money-bill-1-wave text-success md-18"></i>
+                                    <span class="text-muted">Price:</span>
+                                    <span>@trip.Price</span>
+                                </div>
+                                <div class="col-12 col-xl-6 my-2">
+                                    <i class="fa-solid fa-users text-success md-18"></i>
+                                    <span class="text-muted">Aveable seats:</span>
+                                    <span>@trip.FreeSeats</span>
+                                </div>
+                                <div class="col-12 my-2">
+                                    <i class="fa-solid fa-car-side text-success md-18"></i>
+                                    <span class="text-muted">Car:</span>
+                                    <span>@trip.CarName</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+}

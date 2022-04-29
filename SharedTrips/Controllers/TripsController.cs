@@ -86,22 +86,31 @@ namespace SharedTrips.Controllers
 
             query.Cities = tripsService.Cities;
 
-            query.Trips = tripsService.Trips.Select(t => new TripListingViewModel
-            {
-                Id = t.Id,
-                Price = t.Price,
-                FromCity = t.FromCity,
-                ToCity = t.ToCity,
-                TimeOfDeparture = t.TimeOfDeparture,
-                MaxPassengers = t.MaxPassengers,
-                FreeSeats = t.FreeSeats,
-                DriverName = t.DriverName,
-                DriverPictureUrl = t.DriverPictureUrl,
-                DriverRating = t.DriverRating,
-                CarName = this.cars.GetName(t.CarId)
-            }).ToList();
+            query.Trips = MapTripListingViewModel(tripsService.Trips);
 
             return View(query);
+        }
+
+        [Authorize]
+        public IActionResult UserTrips()
+        {
+            var tripsView = new UserTripsViewModel();
+
+            var tripsAsPassenger = MapTripListingViewModel(
+                    this.trips.GetTripsAsPassenger(this.User.GetId()));
+
+            tripsView.TripsAsPassenger = tripsAsPassenger;
+
+            if (this.drivers.UserIsDriver(this.User.GetId()))
+            {
+                var tripsAsDriver = MapTripListingViewModel(
+                    this.trips.GetTripsAsDriver(this.drivers.GetIdByUser(this.User.GetId())));
+
+                tripsView.TripsAsDriver = tripsAsDriver;
+                tripsView.UserIsDriver = true;
+            }
+
+            return View(tripsView);
         }
 
         [Authorize]
@@ -201,6 +210,27 @@ namespace SharedTrips.Controllers
             return RedirectToAction("All", "Trips");
         }
 
+        [Authorize]
+        public IActionResult End(int id)
+        {
+            if (!this.trips.UserIsDriver(id, this.User.GetId()))
+            {
+                return Unauthorized();
+            }
+
+            var trip = this.trips.GetTrip(id);
+
+            if (trip == null)
+            {
+                return BadRequest();
+            }
+
+
+            this.trips.DeleteTrip(id);
+
+            return RedirectToAction("All", "Trips");
+        }
+
         private void ValidateTripFormModel(TripServiceModel trip)
         {
             if (trip.FromCityId == trip.ToCityId)
@@ -216,5 +246,21 @@ namespace SharedTrips.Controllers
                     "City not found");
             }
         }
-    }
+
+        private List<TripListingViewModel> MapTripListingViewModel(List<TripServiceListingModel> trips)
+          =>  trips.Select(t => new TripListingViewModel
+            {
+                Id = t.Id,
+                Price = t.Price,
+                FromCity = t.FromCity,
+                ToCity = t.ToCity,
+                TimeOfDeparture = t.TimeOfDeparture,
+                MaxPassengers = t.MaxPassengers,
+                FreeSeats = t.FreeSeats,
+                DriverName = t.DriverName,
+                DriverPictureUrl = t.DriverPictureUrl,
+                DriverRating = t.DriverRating,
+                CarName = this.cars.GetName(t.CarId)
+            }).ToList();
+}
 }

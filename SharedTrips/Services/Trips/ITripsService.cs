@@ -9,6 +9,10 @@ namespace SharedTrips.Services.Trips
     {
         public AllTripsServiceModel GetTrips(int fromCityId, int toCityId, DateTime timeOfDeparture);
 
+        public List<TripServiceListingModel> GetTripsAsPassenger(string userId);
+
+        public List<TripServiceListingModel> GetTripsAsDriver(int driverId);
+
         public TripServiceModel GetTrip(int tripId);
 
         public DetailsTripServiceModel GetTripDetails(int tripId);

@@ -56,6 +56,44 @@ namespace SharedTrips.Services.Trips
             return query;
         }
 
+        public List<TripServiceListingModel> GetTripsAsPassenger(string userId)
+            => this.data.TripPassenger
+                .Where(tp => tp.PassengerId == userId)
+                .Select(tp => new TripServiceListingModel
+                {
+                    Id = tp.TripId,
+                    Price = tp.Trip.Price,
+                    TimeOfDeparture = tp.Trip.TimeOfDeparture,
+                    MaxPassengers = tp.Trip.MaxPassengers,
+                    FreeSeats = tp.Trip.MaxPassengers - tp.Trip.TripPassengers.Where(tp => tp.Accepted).Count(),
+                    FromCity = tp.Trip.FromCity.Name,
+                    ToCity = tp.Trip.ToCity.Name,
+                    DriverName = tp.Trip.Driver.Name,
+                    DriverPictureUrl = tp.Trip.Driver.ProfilePictureUrl,
+                    DriverRating = tp.Trip.Driver.Feedbacks.Count() == 0 ? 0 : tp.Trip.Driver.Feedbacks.Select(f => f.Rating).Sum() / tp.Trip.Driver.Feedbacks.Count(),
+                    CarId = tp.Trip.Car.Id
+                })
+                .ToList();
+
+        public List<TripServiceListingModel> GetTripsAsDriver(int driverId)
+            => this.data.Trips
+                .Where(t => t.DriverId == driverId)
+                .Select(t => new TripServiceListingModel
+                {
+                    Id = t.Id,
+                    Price = t.Price,
+                    TimeOfDeparture = t.TimeOfDeparture,
+                    MaxPassengers = t.MaxPassengers,
+                    FreeSeats = t.MaxPassengers - t.TripPassengers.Where(tp => tp.Accepted).Count(),
+                    FromCity = t.FromCity.Name,
+                    ToCity = t.ToCity.Name,
+                    DriverName = t.Driver.Name,
+                    DriverPictureUrl = t.Driver.ProfilePictureUrl,
+                    DriverRating = t.Driver.Feedbacks.Count() == 0 ? 0 : t.Driver.Feedbacks.Select(f => f.Rating).Sum() / t.Driver.Feedbacks.Count(),
+                    CarId = t.Car.Id
+                })
+                .ToList();
+
         public TripServiceModel GetTrip(int tripId)
             => this.data.Trips
             .Where(t => t.Id == tripId)
@@ -215,7 +253,5 @@ namespace SharedTrips.Services.Trips
                 Name = c.Name
             })
             .ToList();
-
-        
     }
 }

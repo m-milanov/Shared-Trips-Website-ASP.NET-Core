@@ -1,0 +1,10 @@
+﻿@model UserTripsViewModel
+
+<h2 class="text-center my-4">All your trips as passenger</h2>
+
+<partial name="_ListingTripsPartial" model="@Model.TripsAsPassenger" />
+
+<h2 class="text-center my-4">All your trips as driver</h2>
+
+<partial name="_ListingTripsPartial" model="@Model.TripsAsDriver" />
+
