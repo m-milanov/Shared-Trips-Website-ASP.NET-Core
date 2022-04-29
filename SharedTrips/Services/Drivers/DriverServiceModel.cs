@@ -15,6 +15,8 @@ namespace SharedTrips.Services.Drivers
 
         public int TimesDriver { get; set; }
 
+        public double AvrgRating { get; set; }
+
         public IEnumerable<FeedbackServiceModel> Feedbacks { get; set; }
     }
 }

@@ -46,7 +46,7 @@ namespace SharedTrips.Services.Trips
                     ToCity = t.ToCity.Name,
                     DriverName = t.Driver.Name,
                     DriverPictureUrl = t.Driver.ProfilePictureUrl,
-                    DriverRating = t.Driver.Feedbacks.Count() == 0 ? 0 : t.Driver.Feedbacks.Select(f => f.Rating).Sum() / t.Driver.Feedbacks.Count(),
+                    DriverRating = AverageRating(t.Driver.Feedbacks.Select(f => f.Rating).ToList()),
                     CarId = t.Car.Id
                 }).ToList();
 
@@ -282,5 +282,18 @@ namespace SharedTrips.Services.Trips
                 Name = c.Name
             })
             .ToList();
+
+        private static double AverageRating(List<int> rates)
+        {
+            var count = rates.Count();
+            var sum = rates.Sum();
+
+            if (count == 0)
+            {
+                return 0;
+            }
+
+            return (double)sum / count;
+        }
     }
 }

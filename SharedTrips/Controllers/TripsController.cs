@@ -261,5 +261,7 @@ namespace SharedTrips.Controllers
                 DriverRating = t.DriverRating,
                 CarName = this.cars.GetName(t.CarId)
             }).ToList();
-}
+
+
+    }
 }

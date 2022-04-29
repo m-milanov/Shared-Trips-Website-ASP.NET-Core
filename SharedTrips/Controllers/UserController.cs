@@ -74,8 +74,10 @@ namespace SharedTrips.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult RateDriver(int id)
+        public IActionResult RateDriver(int id, RateDriverServiceModel driver)
         {
+            users.RateDriver(id,this.User.GetId() , driver);
+
             var drivers = users.GetDriversToRate(this.User.GetId());
 
             return View(drivers);

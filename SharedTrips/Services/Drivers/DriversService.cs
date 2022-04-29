@@ -55,6 +55,7 @@ namespace SharedTrips.Services.Drivers
                 PhoneNumber = t.Driver.PhoneNumber,
                 ProfilePictureUrl = t.Driver.ProfilePictureUrl,
                 TimesDriver = t.Driver.TimesDriver,
+                AvrgRating = AverageRating(t.Driver.Feedbacks.Select(f => f.Rating).ToList()),
                 Feedbacks = t.Driver.Feedbacks
                 .Select(f => new FeedbackServiceModel
                 {
@@ -68,6 +69,17 @@ namespace SharedTrips.Services.Drivers
         => this.data.Drivers
                 .Any(d => d.UserId == userId);
 
-        
+        private static double AverageRating(List<int> rates)
+        {
+            var count = rates.Count();
+            var sum = rates.Sum();
+
+            if(count == 0)
+            {
+                return 0;
+            }
+
+            return (double)sum / count;
+        }
     }
 }

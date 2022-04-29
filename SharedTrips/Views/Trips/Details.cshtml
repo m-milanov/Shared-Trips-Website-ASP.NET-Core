@@ -271,11 +271,17 @@
                                 <div class="col">
                                     <div class="text-muted ">Rating</div>
                                     <h5 class="d-inline">
-                                        <i class="fa-regular fa-star"></i>
-                                        <i class="fa-regular fa-star"></i>
-                                        <i class="fa-regular fa-star"></i>
-                                        <i class="fa-regular fa-star"></i>
-                                        <i class="fa-regular fa-star"></i>
+                                        @for (int i = 0; i < 5; i++)
+                                        {
+                                            if (i <= Model.Driver.AvrgRating)
+                                            {
+                                                <i class="fa fa-star text-primary"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fa-regular fa-star"></i>
+                                            }
+                                        }
                                     </h5>
                                     <span class="text-muted">
                                         / @Model.Driver.Feedbacks.Count()
@@ -297,7 +303,15 @@
                         <div class="col">
                             <i class="fa-solid fa-phone text-success md-24"></i>
                             <span class="text-muted align-top">Phone number:</span>
-                            <span class="align-top">@Model.Driver.PhoneNumber</span>
+                            @if (Model.UserIsDriver || Model.UserIsInTrip)
+                            {
+                                <span class="align-top">@Model.Driver.PhoneNumber</span>
+                            }
+                            else
+                            {
+                                <span class="align-top">**********</span>
+                            }
+
                         </div>
                     </div>
                     <div class="row mb-3">
