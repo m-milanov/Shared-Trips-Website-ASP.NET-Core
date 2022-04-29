@@ -1,15 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SharedTrips.Models;
+using SharedTrips.Services.Drivers;
 using System.Diagnostics;
 
 namespace SharedTrips.Controllers
 {
     public class HomeController : Controller
     {
-       
+        private readonly IDriversService drivers;
+
+        public HomeController(IDriversService drivers)
+        {
+            this.drivers = drivers;
+        }
+
+
         public IActionResult Index()
         {
-            return View();
+            return View(this.drivers.GetTopDrivers());
         }
 
 

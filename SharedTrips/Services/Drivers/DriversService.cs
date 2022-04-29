@@ -31,21 +31,6 @@ namespace SharedTrips.Services.Drivers
 
             return driverData.Id;
         }
-
-        public int GetIdByUser(string userId)
-            => this.data.Drivers
-                .Where(d => d.UserId == userId)
-                .Select(d => d.Id)
-                .FirstOrDefault();
-
-        public int GetIdByTrip(int tripId)
-            => this.data.Drivers
-                .Where(d => d.Trips.Any(t => t.Id == tripId))
-                .FirstOrDefault()
-                .Id;
-                
-            
-
         public DriverServiceModel GetDriverForTrip(int tripId)
             => this.data.Trips
             .Where(t => t.Id == tripId)
@@ -64,6 +49,41 @@ namespace SharedTrips.Services.Drivers
                 })
             })
             .FirstOrDefault();
+
+        public List<DriverServiceModel> GetTopDrivers()
+        {
+            var drivers = this.data.Drivers
+                .Select(d => new DriverServiceModel
+                {
+                    Name = d.Name,
+                    ProfilePictureUrl = d.ProfilePictureUrl,
+                    AvrgRating = AverageRating(d.Feedbacks.Select(d => d.Rating).ToList()),
+                    Feedbacks = d.Feedbacks
+                        .Select(f => new FeedbackServiceModel
+                            {
+                                Comment = f.Comment,
+                                Rating = f.Rating
+                            })
+                })
+                .ToList();
+
+            return drivers.OrderBy(d => d.AvrgRating)
+                .Take(2)
+                .ToList();
+        }
+            
+
+        public int GetIdByUser(string userId)
+            => this.data.Drivers
+                .Where(d => d.UserId == userId)
+                .Select(d => d.Id)
+                .FirstOrDefault();
+
+        public int GetIdByTrip(int tripId)
+            => this.data.Drivers
+                .Where(d => d.Trips.Any(t => t.Id == tripId))
+                .FirstOrDefault()
+                .Id;
 
         public bool UserIsDriver(string userId)
         => this.data.Drivers
