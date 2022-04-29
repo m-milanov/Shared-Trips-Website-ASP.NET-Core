@@ -130,7 +130,7 @@ namespace SharedTrips.Extensions
                     var user = new Passenger
                     {
                         Email = adminEmail,
-                        UserName = adminName,
+                        UserName = adminEmail,
                         FullName = adminName,
                         Age = 20,
                     };

@@ -147,7 +147,7 @@ namespace SharedTrips.Controllers
         [Authorize]
         public IActionResult Edit(int id)
         {
-            if(!this.trips.UserIsDriver(id, this.User.GetId()))
+            if(!this.trips.UserIsDriver(id, this.User.GetId()) && !this.User.IsAdmin())
             {
                 return Unauthorized();
             }
@@ -171,7 +171,7 @@ namespace SharedTrips.Controllers
         [HttpPost]
         public IActionResult Edit(int id, TripServiceModel trip)
         {
-            if (!this.trips.UserIsDriver(id, this.User.GetId()))
+            if (!this.trips.UserIsDriver(id, this.User.GetId()) && !this.User.IsAdmin())
             {
                 return Unauthorized();
             }
@@ -261,7 +261,5 @@ namespace SharedTrips.Controllers
                 DriverRating = t.DriverRating,
                 CarName = this.cars.GetName(t.CarId)
             }).ToList();
-
-
     }
 }

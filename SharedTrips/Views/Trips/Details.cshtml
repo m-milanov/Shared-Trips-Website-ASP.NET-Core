@@ -15,7 +15,7 @@
     </div>
     <div class="col-md-7 col-lg-5 my-3 my-md-0">
         <div class="row">
-            @if (Model.UserIsDriver)
+            @if (Model.UserIsDriver || this.User.IsAdmin())
             {
                 <div class="col-md-4 offset-md-6">
                     <a asp-controller="Trips" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success btn-block">
@@ -108,58 +108,6 @@
             </div>
         </div>
 
-        <div class="d-block d-lg-none">
-            <p class="text-muted">Driver info</p>
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12 col-sm-auto mb-3 mb-sm-0">
-                            <div class="d-flex flex-row justify-content-center">
-                                <a href="#">
-                                    <img src="@Model.Driver.ProfilePictureUrl" alt="Profile Picture" class="rounded-circle img-fluid profile-picture pp-large pp-sm-small">
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm">
-                            <a class="text-link" href="#">
-                                <span class="h5">@Model.Driver.Name</span>
-                            </a>
-                            <div class="row mb-3">
-                                <div class="col">
-                                    <div class="text-muted">Rating</div>
-                                    <h5 class="d-inline">
-                                        <i class="fa-regular fa-star"></i>
-                                        <i class="fa-regular fa-star"></i>
-                                        <i class="fa-regular fa-star"></i>
-                                        <i class="fa-regular fa-star"></i>
-                                        <i class="fa-regular fa-star"></i>
-                                    </h5>
-                                    <span class="text-muted">
-                                        / @Model.Driver.Feedbacks.Count()
-                                        <span>rates</span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row text-center text-success mb-3">
-                        <div class="col-6">
-                            <div class="thin-border py-2">
-                                <i class="fa-solid fa-steering-wheel" style="font-size: larger; top:3px;"></i>
-                                <span>@Model.Driver.TimesDriver times</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col">
-                            <i class="fa-solid fa-phone text-success md-24"></i>
-                            <span class="text-muted align-top">Phone number:</span>
-                            <span class="align-top">@Model.Driver.PhoneNumber</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <p class="text-muted ">Car info</p>
 
@@ -273,7 +221,7 @@
                                     <h5 class="d-inline">
                                         @for (int i = 0; i < 5; i++)
                                         {
-                                            if (i <= Model.Driver.AvrgRating)
+                                            if (i <= Model.Driver.AvrgRating && Model.Driver.AvrgRating != 0)
                                             {
                                                 <i class="fa fa-star text-primary"></i>
                                             }
@@ -303,7 +251,7 @@
                         <div class="col">
                             <i class="fa-solid fa-phone text-success md-24"></i>
                             <span class="text-muted align-top">Phone number:</span>
-                            @if (Model.UserIsDriver || Model.UserIsInTrip)
+                            @if (Model.UserIsDriver || Model.Passengers.Any(p => p.Accepted && p.Id == this.User.GetId()))
                             {
                                 <span class="align-top">@Model.Driver.PhoneNumber</span>
                             }

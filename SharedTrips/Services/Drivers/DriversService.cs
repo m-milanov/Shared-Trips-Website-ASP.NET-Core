@@ -67,7 +67,7 @@ namespace SharedTrips.Services.Drivers
                 })
                 .ToList();
 
-            return drivers.OrderBy(d => d.AvrgRating)
+            return drivers.OrderByDescending(d => d.AvrgRating)
                 .Take(2)
                 .ToList();
         }

@@ -18,50 +18,51 @@
     </h3>
 </div>
 
-@foreach(var driver in Model)
-{
 <div class="row">
-    <div class="card mb-3">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-12 col-sm-auto mb-3 mb-sm-0">
-                    <div class="d-flex flex-row justify-content-center">
-                        <a href="#">
-                            <img src="@driver.ProfilePictureUrl" alt="Profile picture" class="rounded-circle img-fluid profile-picture pp-large pp-sm-small">
-                        </a>
+    @foreach (var driver in Model)
+    {
+    <div class="col-6">
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 col-sm-auto mb-3 mb-sm-0">
+                        <div class="d-flex flex-row justify-content-center">
+                            <a href="#">
+                                <img src="@driver.ProfilePictureUrl" alt="Profile picture" class="rounded-circle img-fluid profile-picture pp-large pp-sm-small">
+                            </a>
+                        </div>
                     </div>
-                </div>
-                <div class="col-12 col-sm">
-                    <a class="text-link my-20 " href="#">
-                        <span class="h4">@driver.Name</span>
-                    </a>
-                    <div class="row my-3">
-                        <div class="col">
-                            <div class="text-muted ">Rating</div>
-                            <h5 class="d-inline">
-                                @for (int i = 0; i < 5; i++)
-                                {
-                                    if (i <= driver.AvrgRating)
+                    <div class="col-12 col-sm">
+                        <a class="text-link my-20 " href="#">
+                            <span class="h4">@driver.Name</span>
+                        </a>
+                        <div class="row my-3">
+                            <div class="col">
+                                <div class="text-muted ">Rating</div>
+                                <h5 class="d-inline">
+                                    @for (int i = 0; i < 5; i++)
                                     {
-                                        <i class="fa fa-star text-primary"></i>
+                                        if (i <= driver.AvrgRating && driver.AvrgRating != 0)
+                                        {
+                                            <i class="fa fa-star text-primary"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa-regular fa-star"></i>
+                                        }
                                     }
-                                    else
-                                    {
-                                        <i class="fa-regular fa-star"></i>
-                                    }
-                                }
-                            </h5>
-                            <span class="text-muted">
-                                / @driver.Feedbacks.Count()
-                                <span>rates</span>
-                            </span>
+                                </h5>
+                                <span class="text-muted">
+                                    / @driver.Feedbacks.Count()
+                                    <span>rates</span>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-}
-    
+    }
+</div>  
 

@@ -2,9 +2,13 @@
 
 <h2 class="text-center my-4">All your trips as passenger</h2>
 
-<partial name="_ListingTripsPartial" model="@Model.TripsAsPassenger" />
+<div class="row">
+    <partial name="_ListingTripsPartial" model="@Model.TripsAsPassenger" />
+</div>
 
 <h2 class="text-center my-4">All your trips as driver</h2>
 
-<partial name="_ListingTripsPartial" model="@Model.TripsAsDriver" />
+<div class="row">
+    <partial name="_ListingTripsPartial" model="@Model.TripsAsDriver" />
+</div>
 
