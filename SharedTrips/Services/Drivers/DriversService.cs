@@ -80,6 +80,17 @@ namespace SharedTrips.Services.Drivers
                 .FirstOrDefault();
 
         public int GetIdByTrip(int tripId)
+        {
+            var trips1 = this.data.Trips
+                .Where(t => t.Id == tripId);
+            
+            var id = trips1.Select(t => t.DriverId)
+                .FirstOrDefault();
+
+            return id;
+        }
+
+        public int GetIdByTrip2(int tripId)
             => this.data.Drivers
                 .Where(d => d.Trips.Any(t => t.Id == tripId))
                 .FirstOrDefault()

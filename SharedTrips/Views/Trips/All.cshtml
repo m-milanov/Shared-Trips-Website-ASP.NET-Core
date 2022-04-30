@@ -61,7 +61,7 @@
                                     <div class="d-inline">
                                         @for (int i = 0; i < 5; i++)
                                         {
-                                            if (i <= trip.DriverRating && trip.DriverRating != 0)
+                                            if (i+1 <= trip.DriverRating && trip.DriverRating != 0)
                                             {
                                                 <i class="fa fa-star text-primary"></i>
                                             }

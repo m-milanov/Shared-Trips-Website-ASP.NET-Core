@@ -6,9 +6,14 @@
     <partial name="_ListingTripsPartial" model="@Model.TripsAsPassenger" />
 </div>
 
-<h2 class="text-center my-4">All your trips as driver</h2>
 
-<div class="row">
-    <partial name="_ListingTripsPartial" model="@Model.TripsAsDriver" />
-</div>
+@if (Model.TripsAsDriver != null)
+{
+    <h2 class="text-center my-4">All your trips as driver</h2>
+
+    <div class="row">
+        <partial name="_ListingTripsPartial" model="@Model.TripsAsDriver" />
+    </div>
+}
+
 

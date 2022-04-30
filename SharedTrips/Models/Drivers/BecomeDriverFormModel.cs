@@ -22,6 +22,7 @@ namespace SharedTrips.Models.Drivers
         public string PhoneNumber { get; set; }
 
         [Url]
+        [Required]
         public string ProfilePictureUrl { get; set; }
 
     }
